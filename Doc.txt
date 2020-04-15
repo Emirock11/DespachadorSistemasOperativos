@@ -1,0 +1,68 @@
+Bloqueos:
+
+1 - 400 ms: 2 veces
+401 - 600 ms: 3 veces
+601 - 800 ms: 4 veces
+801 - 10000 ms: 5 veces
+*END
+
+Tiempos:
+
+A: 400 ms
+B: 300 ms
+C: 50 ms
+D: 100 ms
+E: 1000 ms
+F: 500 ms
+G: 10 ms
+H: 700 ms
+I: 450 ms
+J: 300 ms
+K: 100 ms
+L: 3000 ms
+M: 80 ms
+N: 50 ms
+Ñ: 500 ms
+*END
+
+Entornos:
+
+Entorno 1:
+
+CPU: 1
+Cambios: 10 ms
+Bloqueo: 10 ms
+
+Entorno 2:
+
+CPU: 2
+Cambios: 15 ms
+Bloqueo: 15 ms
+
+*END
+
+Cola:
+
++Inicio: 0 ms
+B
+D
+F
+H
++Cambio: 1500 ms
+J
+L
+N
+O
++Cambio: 3000 ms
+A
+C
+E
+G
+I
++Cambio: 4000 ms
+K
+M
+P
++Cambio: 8000 ms
+Ñ
+*END
