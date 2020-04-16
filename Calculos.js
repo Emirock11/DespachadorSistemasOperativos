@@ -91,6 +91,34 @@ LinkedList.prototype.buscarProceso = function ( ID , queBuscar, current= this.he
     }
 }
 
+LinkedList.prototype.buscarProcesoPorLetra = function ( letra , queBuscar, current= this.head){
+    if(this.head === null){
+        return 0
+    }
+    if (current.next !== null){ //El penúltimo
+        if(current.value.letra == letra){ //Si coincide la letra a buscar con el valor que estamos posicionados
+            if(queBuscar == "tiempo"){ //Si se busca el tiempo
+                return current.value.tiempo; // Se regresa el tiempo
+            }else if (queBuscar == "cantidad"){ //Sino...
+                return current.value.cantidadBloqueos; // Regresa la cantidad de bloqueos
+            }else if (queBuscar == "letra"){
+                return current.value.letra;
+            }
+        }
+        //Está mal el return
+        return this.buscarProcesoPorLetra(letra,queBuscar,current.next); //Si no coincide con la letra a buscar, va a seguir buscando
+    }
+    if(current.value.letra == letra){ // El último valor de la lista
+        if(queBuscar == "tiempo"){ //Si se busca el tiempo
+            return current.value.tiempo; // Se regresa el tiempo
+        }else if (queBuscar == "cantidad"){ //Sino...
+            return current.value.cantidadBloqueos; // Regresa la cantidad de bloqueos
+        }else if (queBuscar == "letra"){
+            return current.value.letra;
+        }
+    }
+}
+
 //Aquí se regresa la cantidad de veces en la que se realizará el bloqueo según el rango que se encuentre el proceso
 LinkedList.prototype.buscarBloqueo = function ( ID,aBuscar, current= this.head){
     if(this.head === null){
@@ -123,6 +151,8 @@ LinkedList.prototype.buscarBloqueo = function ( ID,aBuscar, current= this.head){
         }
     }
 }
+
+
 
 LinkedList.prototype.buscarEntorno = function ( ID,aBuscar, current= this.head){
     if(this.head === null){
@@ -182,6 +212,24 @@ LinkedList.prototype.buscarCola = function ( ID,aBuscar, current= this.head){
     }
 }
 
+LinkedList.prototype.buscarMicroRes = function ( ID, current= this.head){
+    if(this.head === null){
+        return 0
+    }
+    if (current.next !== null){ //El penúltimo
+        if(current.value.ID == ID){ //Si coincide con el minMs a buscar con el valor que estamos posicionado
+            return current.value.TF; // Se regresa el maxMs
+
+        }
+        return this.buscarMicroRes(ID, current.next); //Si no coincide con el minMS a buscar, va a seguir buscando
+    }
+
+    if(current.value.ID == ID){ //Si coincide con el minMs a buscar con el valor que estamos posicionados
+        return current.value.TF; // Se regresa el maxMs
+    }
+}
+
+
 LinkedList.prototype.length = function (current = this.head, acum = 1) {
     if(this.head === null){
         return 0
@@ -199,6 +247,7 @@ var listaProcesos = new LinkedList();
 var listaMicros = new LinkedList();
 var listaEntornos = new LinkedList();
 var listaCola = new LinkedList();
+var listaMicrosRes = new LinkedList();
 
 //-------------------------------------------- Creación de los objetos ---------------------------------------------
 
@@ -240,6 +289,11 @@ function Micros(ID, letraMicros, TCC, TE, TVC, TB, TT, Ti, TF, IDMicro){
     this.Ti=Ti;
     this.TF=TF;
     this.IDMicro=IDMicro;
+}
+
+function microsResumen(ID, TF){
+    this.ID = ID;
+    this.TF = TF;
 }
 
 // ------------------------------------------------------- Procesamiento del documento de texto ----------------------------------------------------------------
@@ -420,7 +474,7 @@ for (i =0; i<txt.length ; i++){
     }
 
 }
-listaProcesos.returnList();
+//listaProcesos.returnList();
 // ------------------------------------------------------------- Creación de las tablas ----------------------------------------------------------------
 
 // Creación de la tabla de procesos
@@ -574,4 +628,64 @@ for(var i=1;i<listaCola.length()+1;i++){
 }
 
 console.log(quantum);
+var cantidadMicros = 2;
+// Posicionar tiempos finales a 0 para cada micro
+for(i=1;i<=cantidadMicros;i++){
+    var objetoMicroRes= new microsResumen(i,0);
+    listaMicrosRes.append(objetoMicroRes);
+}
 
+function calcularMicros(){
+    var quantum = 6000;
+    var p = 1;
+    var letraActual;
+    var TCC = 15,TE,TVC,TB=15,TT,Ti = 0,TF = 0;
+    for(i=1;i<=listaCola.length();i++){
+        //Si hay un espacio vacio, el tcc está en 0
+        if(i==1){
+            // el micro a entrar por default es el primero
+
+        }else{
+            var menorTFMicroID=1, TFTemp=0;
+            for(j=1;j<=listaMicrosRes.length();j++){
+                // checar TF de cada micro, el más bajo entra el proceso
+                //
+                if(TFTemp<listaMicrosRes.buscarMicroRes(j)){
+                    TFTemp
+                }
+                // si procesador 1 está vacío, ahí entra, Entre menor el id, mayor prioridad
+
+            }
+        }
+
+        if(i==1){
+            TCC = 0;
+        }else{
+            TCC = 15;
+        }
+        letraActual = listaCola.buscarCola(i,"letra");
+
+        TE = listaProcesos.buscarProcesoPorLetra(letraActual,"tiempo");
+        console.log(TE);
+        TVC = 0; // (Tiempo Ejecución / tamaño quantum )
+        TB = listaProcesos.buscarProcesoPorLetra(letraActual,"cantidad")*listaEntornos.buscarEntorno(numero,"bloqueo");
+        TT = TE+TVC+TCC+TB;
+        Ti = TF;
+        TF = TT + Ti;
+        var objetoMicros = new Micros(i,letraActual,TCC,TE,TVC,TB,TT,Ti,TF,numero);
+        listaMicros.append(objetoMicros);
+    }
+
+}
+
+
+function calcularProcesos(microPosicion) {
+
+    for(var i=1;i<=listaCola.length();i++){
+
+    }
+
+}
+
+calcularMicros();
+console.log(listaMicros.returnList());

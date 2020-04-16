@@ -23,6 +23,8 @@ L: 3000 ms
 M: 80 ms
 N: 50 ms
 Ñ: 500 ms
+O: 600 ms
+P: 800 ms
 *END
 
 Entornos:
