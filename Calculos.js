@@ -68,24 +68,24 @@ LinkedList.prototype.buscarProceso = function ( ID , queBuscar, current= this.he
         return 0
     }
     if (current.next !== null){ //El penúltimo
-        if(current.value.ID == ID){ //Si coincide la letra a buscar con el valor que estamos posicionados
-            if(queBuscar == "tiempo"){ //Si se busca el tiempo
+        if(current.value.ID === ID){ //Si coincide la letra a buscar con el valor que estamos posicionados
+            if(queBuscar === "tiempo"){ //Si se busca el tiempo
                 return current.value.tiempo; // Se regresa el tiempo
-            }else if (queBuscar == "cantidad"){ //Sino...
+            }else if (queBuscar === "cantidad"){ //Sino...
                 return current.value.cantidadBloqueos; // Regresa la cantidad de bloqueos
-            }else if (queBuscar == "letra"){
+            }else if (queBuscar === "letra"){
                 return current.value.letra;
             }
         }
         //Está mal el return
         return this.buscarProceso(ID,queBuscar,current.next); //Si no coincide con la letra a buscar, va a seguir buscando
     }
-    if(current.value.ID == ID){ // El último valor de la lista
-        if(queBuscar == "tiempo"){ //Si se busca el tiempo
+    if(current.value.ID === ID){ // El último valor de la lista
+        if(queBuscar === "tiempo"){ //Si se busca el tiempo
             return current.value.tiempo; // Se regresa el tiempo
-        }else if (queBuscar == "cantidad"){ //Sino...
+        }else if (queBuscar === "cantidad"){ //Sino...
             return current.value.cantidadBloqueos; // Regresa la cantidad de bloqueos
-        }else if (queBuscar == "letra"){
+        }else if (queBuscar === "letra"){
             return current.value.letra;
         }
     }
@@ -96,24 +96,24 @@ LinkedList.prototype.buscarProcesoPorLetra = function ( letra , queBuscar, curre
         return 0
     }
     if (current.next !== null){ //El penúltimo
-        if(current.value.letra == letra){ //Si coincide la letra a buscar con el valor que estamos posicionados
-            if(queBuscar == "tiempo"){ //Si se busca el tiempo
+        if(current.value.letra === letra){ //Si coincide la letra a buscar con el valor que estamos posicionados
+            if(queBuscar === "tiempo"){ //Si se busca el tiempo
                 return current.value.tiempo; // Se regresa el tiempo
-            }else if (queBuscar == "cantidad"){ //Sino...
+            }else if (queBuscar === "cantidad"){ //Sino...
                 return current.value.cantidadBloqueos; // Regresa la cantidad de bloqueos
-            }else if (queBuscar == "letra"){
+            }else if (queBuscar === "letra"){
                 return current.value.letra;
             }
         }
         //Está mal el return
         return this.buscarProcesoPorLetra(letra,queBuscar,current.next); //Si no coincide con la letra a buscar, va a seguir buscando
     }
-    if(current.value.letra == letra){ // El último valor de la lista
-        if(queBuscar == "tiempo"){ //Si se busca el tiempo
+    if(current.value.letra === letra){ // El último valor de la lista
+        if(queBuscar === "tiempo"){ //Si se busca el tiempo
             return current.value.tiempo; // Se regresa el tiempo
-        }else if (queBuscar == "cantidad"){ //Sino...
+        }else if (queBuscar === "cantidad"){ //Sino...
             return current.value.cantidadBloqueos; // Regresa la cantidad de bloqueos
-        }else if (queBuscar == "letra"){
+        }else if (queBuscar === "letra"){
             return current.value.letra;
         }
     }
@@ -125,28 +125,28 @@ LinkedList.prototype.buscarBloqueo = function ( ID,aBuscar, current= this.head){
         return 0
     }
     if (current.next !== null){ //El penúltimo
-        if(current.value.ID == ID){ //Si coincide con el minMs a buscar con el valor que estamos posicionados
-            if(aBuscar == "max"){
+        if(current.value.ID === ID){ //Si coincide con el minMs a buscar con el valor que estamos posicionados
+            if(aBuscar === "max"){
                 return current.value.maxMs; // Se regresa el maxMs
             }
-            if(aBuscar == "min"){
+            if(aBuscar === "min"){
                 return current.value.minMs; // Se regresa el minMS
             }
-            if(aBuscar == "cantidad"){
+            if(aBuscar === "cantidad"){
                 return current.value.cantidadVeces; // Se regresa la cantidad de veces que se hará el bloqueo
             }
         }
         return this.buscarBloqueo(ID, aBuscar,current.next); //Si no coincide con el minMS a buscar, va a seguir buscando
     }
 
-    if(current.value.ID == ID){ // El último valor de la lista
-        if(aBuscar == "max"){
+    if(current.value.ID === ID){ // El último valor de la lista
+        if(aBuscar === "max"){
             return current.value.maxMs; // Se regresa la cantidad de veces que se hará el bloqueo
         }
-        if(aBuscar == "min"){
+        if(aBuscar === "min"){
             return current.value.minMs; // Se regresa la cantidad de veces que se hará el bloqueo
         }
-        if(aBuscar == "cantidad"){
+        if(aBuscar === "cantidad"){
             return current.value.cantidadVeces; // Se regresa la cantidad de veces que se hará el bloqueo
         }
     }
@@ -159,28 +159,28 @@ LinkedList.prototype.buscarEntorno = function ( ID,aBuscar, current= this.head){
         return 0
     }
     if (current.next !== null){ //El penúltimo
-        if(current.value.ID == ID){ //Si coincide con el minMs a buscar con el valor que estamos posicionados
-            if(aBuscar == "CPU"){
+        if(current.value.ID === ID){ //Si coincide con el minMs a buscar con el valor que estamos posicionados
+            if(aBuscar === "CPU"){
                 return current.value.CPU; // Se regresa la cantidad de micros del entorno
             }
-            if(aBuscar == "cambios"){
+            if(aBuscar === "cambios"){
                 return current.value.cambios; // Se regresa el ms de cambios
             }
-            if(aBuscar == "bloqueo"){
+            if(aBuscar === "bloqueo"){
                 return current.value.bloqueo; // Se regresa la cantidad de ms del bloqueo
             }
         }
         return this.buscarEntorno(ID, aBuscar,current.next); //Si no coincide con el minMS a buscar, va a seguir buscando
     }
 
-    if(current.value.ID == ID){ //Si coincide con el minMs a buscar con el valor que estamos posicionados
-        if(aBuscar == "CPU"){
+    if(current.value.ID === ID){ //Si coincide con el minMs a buscar con el valor que estamos posicionados
+        if(aBuscar === "CPU"){
             return current.value.CPU; // Se regresa la cantidad de micros del entorno
         }
-        if(aBuscar == "cambios"){
+        if(aBuscar === "cambios"){
             return current.value.cambios; // Se regresa el ms de cambios
         }
-        if(aBuscar == "bloqueo"){
+        if(aBuscar === "bloqueo"){
             return current.value.bloqueo; // Se regresa la cantidad de ms del bloqueo
         }
     }
@@ -191,22 +191,22 @@ LinkedList.prototype.buscarCola = function ( ID,aBuscar, current= this.head){
         return 0
     }
     if (current.next !== null){ //El penúltimo
-        if(current.value.ID == ID){ //Si coincide con el minMs a buscar con el valor que estamos posicionados
-            if(aBuscar == "letra"){
+        if(current.value.ID === ID){ //Si coincide con el minMs a buscar con el valor que estamos posicionados
+            if(aBuscar === "letra"){
                 return current.value.letraCola; // Se regresa el maxMs
             }
-            if(aBuscar == "ms"){
+            if(aBuscar === "ms"){
                 return current.value.msMin; // Se regresa el minMS
             }
         }
         return this.buscarCola(ID, aBuscar,current.next); //Si no coincide con el minMS a buscar, va a seguir buscando
     }
 
-    if(current.value.ID == ID){ //Si coincide con el minMs a buscar con el valor que estamos posicionados
-        if(aBuscar == "letra"){
+    if(current.value.ID === ID){ //Si coincide con el minMs a buscar con el valor que estamos posicionados
+        if(aBuscar === "letra"){
             return current.value.letraCola; // Se regresa el maxMs
         }
-        if(aBuscar == "ms"){
+        if(aBuscar === "ms"){
             return current.value.msMin; // Se regresa el minMS
         }
     }
@@ -217,16 +217,20 @@ LinkedList.prototype.buscarMicroRes = function ( ID, queHacer,current= this.head
         return 0
     }
     if (current.next !== null){ //El penúltimo
-        if(current.value.ID == ID){ //Si coincide con el minMs a buscar con el valor que estamos posicionado
-            if(queHacer== "boolean"){
-                return current.value.menor;
-            }else if (queHacer=="hueco"){
+        if(current.value.ID === ID){ //Si coincide con el minMs a buscar con el valor que estamos posicionado
+            if(queHacer === "boolean"){
+                return current.value.bool;
+            }else if (queHacer ==="hueco"){
                 return current.value.hueco;
-            }else if(queHacer == "hacerHuecoTrue"){
-                current.value.hueco ==true;
-            }else if(queHacer == "hacerHuecoFalse"){
-                current.value.hueco ==false;
-            }else{
+            }else if(queHacer === "hacerHuecoTrue"){
+                return current.value.hueco = true;
+            }else if(queHacer === "hacerHuecoFalse"){
+                return current.value.hueco = false;
+            }else if(queHacer === "hacerBoolTrue"){
+                return current.value.elMenor = true;
+            }else if(queHacer === "hacerBoolFalse"){
+                return current.value.elMenor = false;
+            }else if (queHacer === "TF"){
                 return current.value.TF;
             }
 
@@ -234,59 +238,49 @@ LinkedList.prototype.buscarMicroRes = function ( ID, queHacer,current= this.head
         return this.buscarMicroRes(ID,queHacer, current.next); //Si no coincide con el minMS a buscar, va a seguir buscando
     }
 
-    if(current.value.ID == ID){ //Si coincide con el minMs a buscar con el valor que estamos posicionados
-        if(queHacer== "boolean"){
-            return current.value.menor;
-        }else if (queHacer=="hueco"){
+    if(current.value.ID === ID){ //Si coincide con el minMs a buscar con el valor que estamos posicionados
+        if(queHacer === "boolean"){
+            return current.value.bool;
+        }else if (queHacer ==="hueco"){
             return current.value.hueco;
-        }else if(queHacer == "hacerHuecoTrue"){
-            current.value.hueco ==true;
-        }else if(queHacer == "hacerHuecoFalse"){
-            current.value.hueco ==false;
-        }else{
+        }else if(queHacer === "hacerHuecoTrue"){
+            return current.value.hueco = true;
+        }else if(queHacer === "hacerHuecoFalse"){
+            return current.value.hueco = false;
+        }else if(queHacer === "hacerBoolTrue"){
+            return current.value.elMenor = true;
+        }else if(queHacer === "hacerBoolFalse"){
+            return current.value.elMenor = false;
+        }else if (queHacer === "TF"){
             return current.value.TF;
         }
     }
 }
 
-LinkedList.prototype.actualizarTFMicrosRes = function ( ID, TF, current= this.head){
-    if(this.head === null){
-        return 0
-    }
-    if (current.next !== null){ //El penúltimo
-        if(current.value.ID == ID){ //Si coincide con el minMs a buscar con el valor que estamos posicionado
-                current.value.TF = TF;
-        }
-    }
-    return this.actualizarTFMicrosRes(ID, TF,current.next);
 
-    if(current.value.ID == ID){ //Si coincide con el minMs a buscar con el valor que estamos posicionado
-        if(current.value.ID == ID){ //Si coincide con el minMs a buscar con el valor que estamos posicionado
-            current.value.TF = TF;
-        }
-    }
-}
 
 LinkedList.prototype.menorMicroRes = function ( ID, queHacer, current= this.head){
     if(this.head === null){
         return 0
     }
     if (current.next !== null){ //El penúltimo
-        if(current.value.ID == ID){ //Si coincide con el minMs a buscar con el valor que estamos posicionado
-            if(queHacer == "falso"){
-                current.value.menor=false;
+
+        if(current.value.ID === ID){ //Si coincide con el minMs a buscar con el valor que estamos posicionado
+
+            if(queHacer === "falso"){
+                current.value.bool=false;
             }else{
-                current.value.menor=true; // Se regresa el maxMs
+                current.value.bool=true;
             }
         }
     }
         return this.menorMicroRes(ID, queHacer,current.next);
 
-    if(current.value.ID == ID){ //Si coincide con el minMs a buscar con el valor que estamos posicionado
-        if(queHacer == "falso"){
+    if(current.value.ID === ID){
+        if(queHacer === "falso"){
             current.value.menor=false;
         }else{
-            current.value.menor=true; // Se regresa el maxMs
+            current.value.menor=true;
         }
     }
 }
@@ -299,6 +293,22 @@ LinkedList.prototype.length = function (current = this.head, acum = 1) {
         return this.length(current.next, acum = acum + 1)
     }
     return acum
+}
+
+LinkedList.prototype.actualizarTF = function ( ID, TF, current= this.head){
+    if(this.head === null){
+        return 0
+    }
+    if (current.next !== null){ //El penúltimo
+        if(current.value.ID === ID){ //Si coincide con el minMs a buscar con el valor que estamos posicionados
+            return current.value.TF = TF;
+        }
+        return this.actualizarTF(ID, TF,current.next); //Si no coincide con el minMS a buscar, va a seguir buscando
+    }
+
+    if(current.value.ID === ID){ //Si coincide con el minMs a buscar con el valor que estamos posicionados
+        return current.value.TF = TF;
+    }
 }
 
 // --------------------------------------------Creación de las listas ----------------------------------------------
@@ -352,10 +362,10 @@ function Micros(ID, letraMicros, TCC, TE, TVC, TB, TT, Ti, TF, IDMicro){
     this.IDMicro=IDMicro;
 }
 
-function microsResumen(ID, TF, menor, hueco){
+function microsResumen(ID, TF, elMenor, hueco){
     this.ID = ID;
     this.TF = TF;
-    this.menor = menor;
+    this.elMenor = elMenor;
     this.hueco = hueco;
 }
 
@@ -368,7 +378,7 @@ for (i =0; i<txt.length ; i++){
     arrayData.push(txt[i]);
     palabra=palabra+txt[i];
 
-    if(palabra == "Tiempos"){
+    if(palabra === "Tiempos"){
         var contID = 1;
         //console.log("Aquí van los tiempos de los procesos");
         //Ya quedó, no mover nada xd
@@ -409,7 +419,7 @@ for (i =0; i<txt.length ; i++){
             j=j+5;
         }
 
-    }else if (palabra == "Bloqueos"){
+    }else if (palabra === "Bloqueos"){
         // Ya Funciona, No mover nada de aquí xd
         // console.log("Aquí va la cantidad de bloqueos\n");
         // Desde aquí inicia el loop hasta que se terminen todos los bloqueos
@@ -449,7 +459,7 @@ for (i =0; i<txt.length ; i++){
             //console.log(txt[j]);
 
         }
-    }else if (palabra == "Entornos"){
+    }else if (palabra === "Entornos"){
         //console.log("Aquí va la cantidad de entornos");
         j=i+6;
         //Aquí empieza el loop
@@ -501,7 +511,7 @@ for (i =0; i<txt.length ; i++){
             j=j+7;
         }
 
-    }else if (palabra == "Cola"){
+    }else if (palabra === "Cola"){
        //console.log("Aquí va la cola");
        var IDCola=1, numCola=0;
         j=i+6
@@ -531,7 +541,7 @@ for (i =0; i<txt.length ; i++){
 
 
     }
-    if(txt[i]== "\n"){
+    if(txt[i] === "\n"){
         //console.log(palabra);
         palabra="";
     }
@@ -588,7 +598,7 @@ const $tablaEntornos = document.querySelector("#tablaEntornos");
 var posicion = 1;
 var contTablaEntornos = 1;
 for(var i=0;i<listaEntornos.length()*6;i++){
-    if(posicion == 1) {
+    if(posicion === 1) {
         const $tr = document.createElement("tr");
         // Creamos el <td> del rango y lo adjuntamos a tr
         let $tdDato = document.createElement("td");
@@ -602,7 +612,7 @@ for(var i=0;i<listaEntornos.length()*6;i++){
         $tablaEntornos.appendChild($tr);
         // Y el ciclo se repite hasta que se termina de recorrer todo el arreglo
         posicion++;
-    }else if(posicion == 2){
+    }else if(posicion === 2){
 
         // Crear un <tr>
         const $tr = document.createElement("tr");
@@ -619,7 +629,7 @@ for(var i=0;i<listaEntornos.length()*6;i++){
         // Y el ciclo se repite hasta que se termina de recorrer todo el arreglo
         posicion++;
 
-    }else if(posicion == 3){
+    }else if(posicion === 3){
         // Crear un <tr>
         const $tr = document.createElement("tr");
         // Creamos el <td> del rango y lo adjuntamos a tr
@@ -635,7 +645,7 @@ for(var i=0;i<listaEntornos.length()*6;i++){
         // Y el ciclo se repite hasta que se termina de recorrer todo el arreglo
         posicion++;
 
-    }else if(posicion == 4){
+    }else if(posicion === 4){
         // Crear un <tr>
         const $tr = document.createElement("tr");
         // Creamos el <td> del rango y lo adjuntamos a tr
@@ -651,7 +661,7 @@ for(var i=0;i<listaEntornos.length()*6;i++){
         // Y el ciclo se repite hasta que se termina de recorrer todo el arreglo
         posicion++;
 
-    }if(posicion == 5 && contTablaEntornos<listaEntornos.length()){
+    }if(posicion === 5 && contTablaEntornos<listaEntornos.length()){
         // Crear un <tr>
         const $tr = document.createElement("tr");
         // Creamos el <td> del rango y lo adjuntamos a tr
@@ -690,99 +700,170 @@ for(var i=1;i<listaCola.length()+1;i++){
     // Y el ciclo se repite hasta que se termina de recorrer todo el arreglo
 }
 
-var cantidadMicros = 3;
+var cantidadMicros = listaEntornos.buscarEntorno(2,"CPU");
 // Posicionar tiempos finales a 0 para cada micro
-for(i=1;i<=cantidadMicros;i++){
-    var objetoMicroRes= new microsResumen(i,0,false,true);
+var provi;
+for(i=1;i<=cantidadMicros;i++) {
+    var objetoMicroRes = new microsResumen(i, 0, false, true);
     listaMicrosRes.append(objetoMicroRes);
-
 }
+
+//listaMicrosRes.returnList();
+
+
+
 
 function calcularMicros(){
     var quantum = 6000;
-    var IDMenorTFMicro=1;
+    var IDMenorTFMicro;
     var letraActual;
-    var TCC = 15,TE,TVC,TB=15,TT,Ti = 0,TF = 0;
+    var TCC,TE,TVC,TB,TT,Ti,TF;
+    var contInicial=1, contHuecos = 0, cambioMs = 0;
+
+
+
     for(i=1;i<=listaCola.length();i++){
 
-        //Si hay un espacio vacio, el tcc está en 0
-        listaMicrosResSort();
-
-        //Elegir el que tenga boolean == true
-        for(var j=1;j<=listaMicrosRes.length();j++){
-            console.log("ñskcljnscjs");
-            if(listaMicrosRes.buscarMicroRes(j,"boolean") == true ){
-                console.log("ñskdwwdwqdqwdwedwedwdew");
-                IDMenorTFMicro=j;
-                // Nos posicionamos a este micro
-                console.log(IDMenorTFMicro);
-            }
+        if(i <= cantidadMicros ){
+            // Tal vez y no sea necesario
+            IDMenorTFMicro = contInicial;
+            contInicial++;
+        }else{
+            TCC = listaEntornos.buscarEntorno(2,"cambios");
+            //Elegir el que tenga boolean == true
+            IDMenorTFMicro = sortListaMicrosRes();
+            //console.log(IDMenorTFMicro);
         }
         // Ver si puede entrar a la cola
-        if(listaMicrosRes.menorMicroRes(IDMenorTFMicro,"TF") >= listaCola.buscarCola(i,"ms")){// Si el tiempo final es menor al tiempo final del micro
-            if(listaMicrosRes.buscarMicroRes(i,"hueco")== true){ //Si es el inicio o si hay espacio
+        if(listaMicrosRes.buscarMicroRes(IDMenorTFMicro,"TF") >= listaCola.buscarCola(i,"ms")){ // Si el tiempo final es menor al tiempo final del micro
+            if(listaMicrosRes.buscarMicroRes(i,"hueco") === true){ //Si es el inicio o si hay espacio
                 TCC = 0;
-
             }else{
                 TCC = 15;
             }
-
+            // Observamos la letra actual en la que estamos posicionados
             letraActual = listaCola.buscarCola(i,"letra");
+            // Sacamos el Tiempo de la letra y lo guardamos en la variable TE
             TE = listaProcesos.buscarProcesoPorLetra(letraActual,"tiempo");
-            TVC = (Math.ceil(TE / quantum)-1)*TCC;
-            TB = listaProcesos.buscarProcesoPorLetra(letraActual,"cantidad")*TB;
+            // Sacamos el TVC
+            TVC = 0;//(Math.ceil(TE / quantum)-1)*TCC
+            // Sacamos el tiempo de bloqueo multiplicando la cantidad de veces en las que se utilizará el bloqueo por los ms propuestos en el entorno
+            TB = listaProcesos.buscarProcesoPorLetra(letraActual,"cantidad")*listaEntornos.buscarEntorno(2,"bloqueo");
+            // Sacamos el tiempo total
             TT = TE+TVC+TCC+TB;
+            // Establecemos el tiempo inicial con el tiempo final pasado de la micro en donde estamos actualmente
             Ti = listaMicrosRes.buscarMicroRes(IDMenorTFMicro,"TF");
             TF = TT + Ti;
-            var objetoMicros = new Micros(i,letraActual,TCC,TE,TVC,TB,TT,Ti,TF,IDMenorTFMicro);
-            listaMicrosRes.actualizarTFMicrosRes(IDMenorTFMicro,TF);
+            var objetoMicros = new Micros(i+contHuecos,letraActual,TCC,TE,TVC,TB,TT,Ti,TF,IDMenorTFMicro);
+            // Error aquí
+            listaMicrosRes.actualizarTF(IDMenorTFMicro,TF);
             listaMicrosRes.buscarMicroRes(IDMenorTFMicro,"hacerHuecoFalse");
             listaMicros.append(objetoMicros);
         }else{
+            // Nos posicionamos en el micro 1 por prioridad
+            IDMenorTFMicro = 1;
             // Modo de reposo = on y va a esperar "x" tiempo
             // 1400         1500 - 1400
             TE=listaCola.buscarCola(i,"ms")-listaMicrosRes.buscarMicroRes(IDMenorTFMicro,"TF");
             listaMicrosRes.buscarMicroRes(IDMenorTFMicro,"hacerHuecoTrue");
             Ti = listaMicrosRes.buscarMicroRes(IDMenorTFMicro,"TF"); // Actualizar Tiempo Final
             TF = Ti+TE;
-            listaMicrosRes.actualizarTFMicrosRes(IDMenorTFMicro,TF);
+            listaMicrosRes.actualizarTF(IDMenorTFMicro,TF);
 
-            var objetoMicros = new Micros(i,"-","-",TE,"-","-",TE,Ti,TF,IDMenorTFMicro);
+            var objetoMicros = new Micros(i+contHuecos,"-","-",TE,"-","-",TE,Ti,TF,IDMenorTFMicro);
 
             listaMicros.append(objetoMicros);
-            i--;
+            contHuecos++;
+            //i--;
         }
-
-
-
-
-
-
-
-
 
     }
 
 }
 
-function listaMicrosResSort() {
-    var cont =1;
-    for (var i=listaMicrosRes.length();i>1;i--){
-        if(listaMicrosRes.buscarMicroRes(i-1,"TF")<=listaMicrosRes.buscarMicroRes(i,"TF")){
-            console.log("Condicion sort");
-            listaMicrosRes.menorMicroRes(i-1,"verdadero");
-            cont++;
+function calcularMicro(){
+    var TCC,TE,TVC,TB,TT,Ti,TF=0;
+    var letraActual;
+    for(var i=1; i<=listaCola.length();i++){
+        letraActual=listaCola.buscarCola(i,"letra");
+        if(i==1){
+            TCC=0;
         }else{
-            listaMicrosRes.menorMicroRes(i-1,"falso");
-
-            listaMicrosRes.menorMicroRes(i,"verdadero");
-
-            cont++;
+            TCC=listaEntornos.buscarEntorno(1,"cambios");
         }
+        TE=listaProcesos.buscarProcesoPorLetra(letraActual,"tiempo"); // Tenemos que regresar el ID de la letra en la que estamos
+        TVC=0; // SUponiendo que el quantum es de 3000
+        TB=listaEntornos.buscarEntorno(1,"bloqueo")*listaProcesos.buscarProcesoPorLetra(letraActual,"cantidad");
+        TT=TCC+TE+TVC+TB;
+        Ti = TF;
+        TF = TT+Ti;
+        var objetoMicro = new Micros(i,listaCola.buscarCola(i,"letra"),TCC,TE,TVC,TB,TT,Ti,TF,1);
+        listaMicros.append(objetoMicro);
+
     }
-    console.log("Contador: "+cont);
+
 }
 
-console.log(listaMicrosRes.returnList());
+
+function sortListaMicrosRes() {
+    var IDMenor = 0;
+    for (var i=listaMicrosRes.length();i>0;i--){
+        //console.log(i);
+        // Vamos a buscar el menor de la lista
+        if(listaMicrosRes.buscarMicroRes(i-1,"TF")<=listaMicrosRes.buscarMicroRes(i,"TF")){
+            if (IDMenor === 0){
+                listaMicrosRes.buscarMicroRes(i-1,"hacerBoolTrue");
+                listaMicrosRes.buscarMicroRes(i,"hacerBoolFalse");
+                IDMenor = i-1;
+                //console.log("Entra por primera vez 1.1");
+            }
+            if (listaMicrosRes.buscarMicroRes(IDMenor,"TF")<=listaMicrosRes.buscarMicroRes(i-1,"TF") && IDMenor < i-1){ // Se compara la cantidad con el de menor ID
+                // Si el menor ID es menor a la posición actual
+                // IDMenor no cambia nada y el bool de la posición es falso
+                listaMicrosRes.buscarMicroRes(i-1,"hacerBoolFalse");
+                //console.log("IDMenor no cambia nada y el bool de la posición es falso. 1.2");
+
+            }else{
+                // IDMenor cambia junto con el bool de el IDMenor anterior y el bool de la posición actual es verdadero y el IDMenor cambia con la posición actual
+                listaMicrosRes.buscarMicroRes(IDMenor,"hacerBoolFalse");
+                listaMicrosRes.buscarMicroRes(i-1,"hacerBoolTrue");
+                IDMenor = i-1;
+                //onsole.log("IDMenor cambia junto con el bool de el IDMenor anterior. 1.3");
+            }
+        }else{
+            if (IDMenor === 0){
+                listaMicrosRes.buscarMicroRes(i,"hacerBoolTrue");
+                listaMicrosRes.buscarMicroRes(i-1,"hacerBoolFalse");
+                IDMenor = i;
+                //console.log("Entra por primera vez. 2.1");
+            }
+            if (listaMicrosRes.buscarMicroRes(IDMenor,"TF")<=listaMicrosRes.buscarMicroRes(i,"TF") && IDMenor > i){ // Se compara la cantidad con el de menor ID
+                // Si el menor ID es menor a la posición actual
+                // IDMenor no cambia nada y el bool de la posición es falso
+                listaMicrosRes.buscarMicroRes(i,"hacerBoolFalse");
+                //console.log("IDMenor no cambia nada y el bool de la posición es falso. 2.2");
+
+            }else{
+                // IDMenor cambia junto con el bool de el IDMenor anterior y el bool de la posición actual es verdadero y el IDMenor cambia con la posición actual
+                listaMicrosRes.buscarMicroRes(IDMenor,"hacerBoolFalse");
+                //console.log("IDMenor cambia junto con el bool de el IDMenor anterior. 2.3");
+                listaMicrosRes.buscarMicroRes(i,"hacerBoolTrue");
+                IDMenor = i;
+                }
+        }
+        //console.log("ID menor: "+IDMenor);
+    }
+    return IDMenor;
+    //console.log(cont);
+}
+
+//sortListaMicrosRes();
+
+//calcularMicro();
+
+//listaMicros.returnList();
+//listaMicrosRes.returnList();
+//listaProcesos.returnList();
+
 calcularMicros();
-console.log(listaMicrosRes.returnList());
+listaMicros.returnList();
