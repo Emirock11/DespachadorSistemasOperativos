@@ -700,7 +700,9 @@ for(var i=1;i<listaCola.length()+1;i++){
     // Y el ciclo se repite hasta que se termina de recorrer todo el arreglo
 }
 
-var cantidadMicros = listaEntornos.buscarEntorno(2,"CPU");
+var IDEntorno = 2;
+
+var cantidadMicros = listaEntornos.buscarEntorno(IDEntorno,"CPU");
 // Posicionar tiempos finales a 0 para cada micro
 var provi;
 for(i=1;i<=cantidadMicros;i++) {
@@ -718,29 +720,31 @@ function calcularMicros(){
     var IDMenorTFMicro;
     var letraActual;
     var TCC,TE,TVC,TB,TT,Ti,TF;
-    var contInicial=1, contHuecos = 0, cambioMs = 0;
+    var contInicial=1, contHuecos = 0, cambioMs = false, primeraVez=true;
 
 
 
     for(i=1;i<=listaCola.length();i++){
 
-        if(i <= cantidadMicros ){
-            // Tal vez y no sea necesario
-            IDMenorTFMicro = contInicial;
-            contInicial++;
+        if(cambioMs == true){
+            IDMenorTFMicro = 1;
+            cambioMs = false;
+            //console.log(cambioMs);
         }else{
-            TCC = listaEntornos.buscarEntorno(2,"cambios");
             //Elegir el que tenga boolean == true
             IDMenorTFMicro = sortListaMicrosRes();
             //console.log(IDMenorTFMicro);
         }
+
         // Ver si puede entrar a la cola
         if(listaMicrosRes.buscarMicroRes(IDMenorTFMicro,"TF") >= listaCola.buscarCola(i,"ms")){ // Si el tiempo final es menor al tiempo final del micro
-            if(listaMicrosRes.buscarMicroRes(i,"hueco") === true){ //Si es el inicio o si hay espacio
+
+            if(listaMicrosRes.buscarMicroRes(i,"hueco") === true){ //Si es el inicio o si hay un hueco antes...
                 TCC = 0;
             }else{
-                TCC = 15;
+                TCC = listaEntornos.buscarEntorno(IDEntorno,"cambios");
             }
+
             // Observamos la letra actual en la que estamos posicionados
             letraActual = listaCola.buscarCola(i,"letra");
             // Sacamos el Tiempo de la letra y lo guardamos en la variable TE
@@ -748,20 +752,26 @@ function calcularMicros(){
             // Sacamos el TVC
             TVC = 0;//(Math.ceil(TE / quantum)-1)*TCC
             // Sacamos el tiempo de bloqueo multiplicando la cantidad de veces en las que se utilizará el bloqueo por los ms propuestos en el entorno
-            TB = listaProcesos.buscarProcesoPorLetra(letraActual,"cantidad")*listaEntornos.buscarEntorno(2,"bloqueo");
+            TB = listaProcesos.buscarProcesoPorLetra(letraActual,"cantidad")*listaEntornos.buscarEntorno(IDEntorno,"bloqueo");
             // Sacamos el tiempo total
             TT = TE+TVC+TCC+TB;
             // Establecemos el tiempo inicial con el tiempo final pasado de la micro en donde estamos actualmente
             Ti = listaMicrosRes.buscarMicroRes(IDMenorTFMicro,"TF");
             TF = TT + Ti;
             var objetoMicros = new Micros(i+contHuecos,letraActual,TCC,TE,TVC,TB,TT,Ti,TF,IDMenorTFMicro);
-            // Error aquí
             listaMicrosRes.actualizarTF(IDMenorTFMicro,TF);
             listaMicrosRes.buscarMicroRes(IDMenorTFMicro,"hacerHuecoFalse");
             listaMicros.append(objetoMicros);
+
         }else{
             // Nos posicionamos en el micro 1 por prioridad
-            IDMenorTFMicro = 1;
+            if(primeraVez==true){
+                IDMenorTFMicro = 1;
+                primeraVez = false;
+            }else{
+                IDMenorTFMicro = sortListaMicrosRes();
+            }
+
             // Modo de reposo = on y va a esperar "x" tiempo
             // 1400         1500 - 1400
             TE=listaCola.buscarCola(i,"ms")-listaMicrosRes.buscarMicroRes(IDMenorTFMicro,"TF");
@@ -773,8 +783,9 @@ function calcularMicros(){
             var objetoMicros = new Micros(i+contHuecos,"-","-",TE,"-","-",TE,Ti,TF,IDMenorTFMicro);
 
             listaMicros.append(objetoMicros);
-            contHuecos++;
-            //i--;
+            contHuecos++;console.log("huecos: "+contHuecos);
+            cambioMs = true;
+            i--;
         }
 
     }

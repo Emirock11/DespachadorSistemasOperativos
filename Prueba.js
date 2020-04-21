@@ -117,7 +117,7 @@ lista.append(proceso6);
 var proceso7 = new proceso(7,"G",10,2);
 lista.append(proceso7);
 
-console.log(lista.returnList());
+//console.log(lista.returnList());
 
 
 
@@ -197,4 +197,11 @@ function generarTablas(cantidad) {
 
 }
 
-generarTablas(4);
+//generarTablas(4);
+
+var TE = 300;
+var quantum = 50;
+var TCC = 15;
+var TVC=(Math.ceil(TE/quantum)-1)*TCC;
+
+console.log(TVC);
