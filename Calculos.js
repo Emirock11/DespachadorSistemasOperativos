@@ -6,7 +6,7 @@ var i=0;
 var j=0;
 var palabra = "";
 var letra="",numCola;
-var maxMs, minMs, numVeces, quantum;
+var maxMs, minMs, numVeces, quantum,click=false;
 
 // ---------------------------------------------- Listas Ligadas -----------------------------------------------------
 
@@ -232,6 +232,8 @@ LinkedList.prototype.buscarMicroRes = function ( ID, queHacer,current= this.head
                 return current.value.elMenor = false;
             }else if (queHacer === "TF"){
                 return current.value.TF;
+            }else if(queHacer === "ultimo"){
+                return current.value.ultimoElementoID;
             }
 
         }
@@ -253,6 +255,8 @@ LinkedList.prototype.buscarMicroRes = function ( ID, queHacer,current= this.head
             return current.value.elMenor = false;
         }else if (queHacer === "TF"){
             return current.value.TF;
+        }else if(queHacer === "ultimo"){
+            return current.value.ultimoElementoID;
         }
     }
 }
@@ -311,14 +315,110 @@ LinkedList.prototype.actualizarTF = function ( ID, TF, current= this.head){
     }
 }
 
+LinkedList.prototype.length = function (current = this.head, acum = 1) {
+    if(this.head === null){
+        return 0
+    }
+    if (current.next !== null){
+        return this.length(current.next, acum = acum + 1)
+    }
+    return acum
+}
+
+LinkedList.prototype.actualizarUltimoElementoID = function ( ID, ultimoElementoID, current= this.head){
+    if(this.head === null){
+        return 0
+    }
+    if (current.next !== null){ //El penúltimo
+        if(current.value.ID === ID){ //Si coincide con el minMs a buscar con el valor que estamos posicionados
+            return current.value.ultimoElementoID = ultimoElementoID;
+        }
+        return this.actualizarUltimoElementoID(ID, ultimoElementoID,current.next); //Si no coincide con el minMS a buscar, va a seguir buscando
+    }
+
+    if(current.value.ID === ID){ //Si coincide con el minMs a buscar con el valor que estamos posicionados
+        return current.value.ultimoElementoID = ultimoElementoID;
+    }
+}
+
+LinkedList.prototype.buscarMicro = function ( ID, aBuscar, IDMicro, current= this.head){
+    if(this.head === null){
+        return 0
+    }
+    if (current.next !== null){
+        if(current.value.ID === ID && current.value.IDMicro === IDMicro){
+            if(aBuscar === "letra"){
+                return current.value.letraMicros;
+            }
+            if(aBuscar === "TCC"){
+                return current.value.TCC;
+            }
+            if(aBuscar === "TE"){
+                return current.value.TE;
+            }
+            if(aBuscar === "TVC"){
+                return current.value.TVC;
+            }
+            if(aBuscar === "TB"){
+                return current.value.TB;
+            }
+            if(aBuscar === "TT"){
+                return current.value.TT;
+            }
+            if(aBuscar === "Ti"){
+                return current.value.Ti;
+            }
+            if(aBuscar === "TF"){
+                return current.value.TF;
+            }
+            if(aBuscar === "IDMicro"){
+                return current.value.IDMicro;
+            }
+        }
+        return this.buscarMicro(ID, aBuscar, IDMicro,current.next); //Si no coincide con el minMS a buscar, va a seguir buscando
+    }
+
+    if(current.value.ID === ID && current.value.IDMicro === IDMicro){ // El último valor de la lista
+        if(aBuscar === "letra"){
+            return current.value.letraMicros;
+        }
+        if(aBuscar === "TCC"){
+            return current.value.TCC;
+        }
+        if(aBuscar === "TE"){
+            return current.value.TE;
+        }
+        if(aBuscar === "TVC"){
+            return current.value.TVC;
+        }
+        if(aBuscar === "TB"){
+            return current.value.TB;
+        }
+        if(aBuscar === "TT"){
+            return current.value.TT;
+        }
+        if(aBuscar === "Ti"){
+            return current.value.Ti;
+        }
+        if(aBuscar === "TF"){
+            return current.value.TF;
+        }
+        if(aBuscar === "IDMicro"){
+            return current.value.IDMicro;
+        }
+    }
+}
+
+
+
 // --------------------------------------------Creación de las listas ----------------------------------------------
 
 var listaBloqueos = new LinkedList();
 var listaProcesos = new LinkedList();
-var listaMicros = new LinkedList();
+
 var listaEntornos = new LinkedList();
 var listaCola = new LinkedList();
-var listaMicrosRes = new LinkedList();
+
 
 //-------------------------------------------- Creación de los objetos ---------------------------------------------
 
@@ -362,11 +462,12 @@ function Micros(ID, letraMicros, TCC, TE, TVC, TB, TT, Ti, TF, IDMicro){
     this.IDMicro=IDMicro;
 }
 
-function microsResumen(ID, TF, elMenor, hueco){
+function microsResumen(ID, TF, elMenor, hueco, ultimoElementoID){
     this.ID = ID;
     this.TF = TF;
     this.elMenor = elMenor;
     this.hueco = hueco;
+    this.ultimoElementoID = ultimoElementoID;
 }
 
 // ------------------------------------------------------- Procesamiento del documento de texto ----------------------------------------------------------------
@@ -549,7 +650,7 @@ for (i =0; i<txt.length ; i++){
 }
 //listaProcesos.returnList();
 // ------------------------------------------------------------- Creación de las tablas ----------------------------------------------------------------
-
+/*
 // Creación de la tabla de procesos
 const $tablaProcesos = document.querySelector("#tablaProcesos");
 // Recorrer todos los productos
@@ -698,174 +799,131 @@ for(var i=1;i<listaCola.length()+1;i++){
     // Finalmente agregamos el <tr> al cuerpo de la tabla
     $tablaCola.appendChild($tr);
     // Y el ciclo se repite hasta que se termina de recorrer todo el arreglo
-}
+}*/
 
-var IDEntorno = 2;
 
-var cantidadMicros = listaEntornos.buscarEntorno(IDEntorno,"CPU");
+// Datos de entrada
+var cantidadMicros =1;//listaEntornos.buscarEntorno(IDEntorno,"CPU");
+var quantum = 3000;
+var TCC = 10;
+var TB = 10;
+
 // Posicionar tiempos finales a 0 para cada micro
 var provi;
-for(i=1;i<=cantidadMicros;i++) {
-    var objetoMicroRes = new microsResumen(i, 0, false, true);
-    listaMicrosRes.append(objetoMicroRes);
-}
+
 
 //listaMicrosRes.returnList();
 
 
 
+var listaMicros = new LinkedList();
+var listaMicrosRes = new LinkedList();
 
-function calcularMicros(){
-    var quantum = 6000;
+
+
+function calcularMicros(cantidadMicros, quantum, TCC, TB){
+    listaMicros = new LinkedList();
+    listaMicrosRes = new LinkedList();
     var IDMenorTFMicro;
     var letraActual;
-    var TCC,TE,TVC,TB,TT,Ti,TF;
-    var contInicial=1, contHuecos = 0, cambioMs = false, primeraVez=true;
-
+    var TCCCalcular,TE,TVC,TBCalcular,TT,Ti,TF;
+    var contHuecos = 0, cambioMs = false, IDTemp;
+    for(i=1;i<=cantidadMicros;i++) {
+        var objetoMicroRes = new microsResumen(i, 0, false, true, 0);
+        listaMicrosRes.append(objetoMicroRes);
+    }
 
 
     for(i=1;i<=listaCola.length();i++){
 
         if(cambioMs == true){
-            IDMenorTFMicro = 1;
+            IDMenorTFMicro = IDTemp;
             cambioMs = false;
             //console.log(cambioMs);
         }else{
             //Elegir el que tenga boolean == true
             IDMenorTFMicro = sortListaMicrosRes();
-            //console.log(IDMenorTFMicro);
+            //console.log("ID Menor TF: "+IDMenorTFMicro);
         }
 
         // Ver si puede entrar a la cola
         if(listaMicrosRes.buscarMicroRes(IDMenorTFMicro,"TF") >= listaCola.buscarCola(i,"ms")){ // Si el tiempo final es menor al tiempo final del micro
 
-            if(listaMicrosRes.buscarMicroRes(i,"hueco") === true){ //Si es el inicio o si hay un hueco antes...
-                TCC = 0;
+            if(listaMicrosRes.buscarMicroRes(IDMenorTFMicro,"hueco") === true){ //Si es el inicio o si hay un hueco antes...
+                TCCCalcular = 0;
+                listaMicrosRes.buscarMicroRes(IDMenorTFMicro,"hacerHuecoFalse");
             }else{
-                TCC = listaEntornos.buscarEntorno(IDEntorno,"cambios");
+                TCCCalcular = TCC;
             }
-
+            //console.log("Antes - ID. "+IDMenorTFMicro+" TF:"+listaMicrosRes.buscarMicroRes(IDMenorTFMicro,"TF"));
             // Observamos la letra actual en la que estamos posicionados
             letraActual = listaCola.buscarCola(i,"letra");
             // Sacamos el Tiempo de la letra y lo guardamos en la variable TE
             TE = listaProcesos.buscarProcesoPorLetra(letraActual,"tiempo");
             // Sacamos el TVC
-            TVC = 0;//(Math.ceil(TE / quantum)-1)*TCC
+            TVC = (Math.ceil(TE/quantum)-1)*15;//(Math.ceil(TE / quantum)-1)*TCC
             // Sacamos el tiempo de bloqueo multiplicando la cantidad de veces en las que se utilizará el bloqueo por los ms propuestos en el entorno
-            TB = listaProcesos.buscarProcesoPorLetra(letraActual,"cantidad")*listaEntornos.buscarEntorno(IDEntorno,"bloqueo");
+            TBCalcular = listaProcesos.buscarProcesoPorLetra(letraActual,"cantidad")*TB;
             // Sacamos el tiempo total
-            TT = TE+TVC+TCC+TB;
+            TT = TE+TVC+TCCCalcular+TBCalcular;
             // Establecemos el tiempo inicial con el tiempo final pasado de la micro en donde estamos actualmente
             Ti = listaMicrosRes.buscarMicroRes(IDMenorTFMicro,"TF");
             TF = TT + Ti;
-            var objetoMicros = new Micros(i+contHuecos,letraActual,TCC,TE,TVC,TB,TT,Ti,TF,IDMenorTFMicro);
-            listaMicrosRes.actualizarTF(IDMenorTFMicro,TF);
-            listaMicrosRes.buscarMicroRes(IDMenorTFMicro,"hacerHuecoFalse");
-            listaMicros.append(objetoMicros);
+            var objetoMicros = new Micros(i+contHuecos,letraActual,TCCCalcular,TE,TVC,TBCalcular,TT,Ti,TF,IDMenorTFMicro);
 
+            listaMicrosRes.actualizarTF(IDMenorTFMicro,TF);
+            listaMicrosRes.actualizarUltimoElementoID(IDMenorTFMicro,i+contHuecos);
+            //console.log("Depues - ID. "+IDMenorTFMicro+" TF:"+TF);
+            //listaMicrosRes.returnList();
+            listaMicros.append(objetoMicros);
         }else{
-            // Nos posicionamos en el micro 1 por prioridad
-            if(primeraVez==true){
-                IDMenorTFMicro = 1;
-                primeraVez = false;
-            }else{
-                IDMenorTFMicro = sortListaMicrosRes();
+            // Nos posicionamos desde el micro 1
+            for(var j=1; j<=listaMicrosRes.length();j++){
+                if(listaMicrosRes.buscarMicroRes(j,"TF")<listaCola.buscarCola(i,"ms")){
+                    // Si se hace un hueco
+                    TE=listaCola.buscarCola(i,"ms")-listaMicrosRes.buscarMicroRes(j,"TF");
+                    listaMicrosRes.buscarMicroRes(j,"hacerHuecoTrue");
+                    Ti = listaMicrosRes.buscarMicroRes(j,"TF"); // Actualizar Ti
+                    TF = listaCola.buscarCola(i,"ms");
+                    listaMicrosRes.actualizarTF(j,TF);
+                    listaMicrosRes.actualizarUltimoElementoID(j,i+contHuecos);
+                    var objetoMicros = new Micros(i+contHuecos,"-","-",TE,"-","-",TE,Ti,TF,j);
+
+                    listaMicros.append(objetoMicros);
+                    contHuecos++;
+                    //console.log("huecos: "+contHuecos);
+                    cambioMs = true;
+                    IDTemp = sortListaMicrosRes();
+                    i--;
+                }
             }
-
-            // Modo de reposo = on y va a esperar "x" tiempo
-            // 1400         1500 - 1400
-            TE=listaCola.buscarCola(i,"ms")-listaMicrosRes.buscarMicroRes(IDMenorTFMicro,"TF");
-            listaMicrosRes.buscarMicroRes(IDMenorTFMicro,"hacerHuecoTrue");
-            Ti = listaMicrosRes.buscarMicroRes(IDMenorTFMicro,"TF"); // Actualizar Tiempo Final
-            TF = Ti+TE;
-            listaMicrosRes.actualizarTF(IDMenorTFMicro,TF);
-
-            var objetoMicros = new Micros(i+contHuecos,"-","-",TE,"-","-",TE,Ti,TF,IDMenorTFMicro);
-
-            listaMicros.append(objetoMicros);
-            contHuecos++;console.log("huecos: "+contHuecos);
-            cambioMs = true;
-            i--;
         }
-
     }
-
-}
-
-function calcularMicro(){
-    var TCC,TE,TVC,TB,TT,Ti,TF=0;
-    var letraActual;
-    for(var i=1; i<=listaCola.length();i++){
-        letraActual=listaCola.buscarCola(i,"letra");
-        if(i==1){
-            TCC=0;
-        }else{
-            TCC=listaEntornos.buscarEntorno(1,"cambios");
-        }
-        TE=listaProcesos.buscarProcesoPorLetra(letraActual,"tiempo"); // Tenemos que regresar el ID de la letra en la que estamos
-        TVC=0; // SUponiendo que el quantum es de 3000
-        TB=listaEntornos.buscarEntorno(1,"bloqueo")*listaProcesos.buscarProcesoPorLetra(letraActual,"cantidad");
-        TT=TCC+TE+TVC+TB;
-        Ti = TF;
-        TF = TT+Ti;
-        var objetoMicro = new Micros(i,listaCola.buscarCola(i,"letra"),TCC,TE,TVC,TB,TT,Ti,TF,1);
-        listaMicros.append(objetoMicro);
-
-    }
-
+    generarTablas(cantidadMicros);
 }
 
 
-function sortListaMicrosRes() {
-    var IDMenor = 0;
-    for (var i=listaMicrosRes.length();i>0;i--){
+function sortListaMicrosRes(){
+    var IDMenor = listaMicrosRes.length();
+
+    for (var i=listaMicrosRes.length();i>1;i--){
         //console.log(i);
         // Vamos a buscar el menor de la lista
-        if(listaMicrosRes.buscarMicroRes(i-1,"TF")<=listaMicrosRes.buscarMicroRes(i,"TF")){
-            if (IDMenor === 0){
-                listaMicrosRes.buscarMicroRes(i-1,"hacerBoolTrue");
-                listaMicrosRes.buscarMicroRes(i,"hacerBoolFalse");
-                IDMenor = i-1;
-                //console.log("Entra por primera vez 1.1");
-            }
-            if (listaMicrosRes.buscarMicroRes(IDMenor,"TF")<=listaMicrosRes.buscarMicroRes(i-1,"TF") && IDMenor < i-1){ // Se compara la cantidad con el de menor ID
-                // Si el menor ID es menor a la posición actual
-                // IDMenor no cambia nada y el bool de la posición es falso
-                listaMicrosRes.buscarMicroRes(i-1,"hacerBoolFalse");
-                //console.log("IDMenor no cambia nada y el bool de la posición es falso. 1.2");
-
-            }else{
-                // IDMenor cambia junto con el bool de el IDMenor anterior y el bool de la posición actual es verdadero y el IDMenor cambia con la posición actual
+        if(listaMicrosRes.buscarMicroRes(i,"TF")>=listaMicrosRes.buscarMicroRes(i-1,"TF")){
+            if(listaMicrosRes.buscarMicroRes(IDMenor,"TF")>=listaMicrosRes.buscarMicroRes(i-1,"TF")){
                 listaMicrosRes.buscarMicroRes(IDMenor,"hacerBoolFalse");
-                listaMicrosRes.buscarMicroRes(i-1,"hacerBoolTrue");
-                IDMenor = i-1;
-                //onsole.log("IDMenor cambia junto con el bool de el IDMenor anterior. 1.3");
+                IDMenor=i-1;
+                listaMicrosRes.buscarMicroRes(IDMenor,"hacerBoolTrue");
             }
         }else{
-            if (IDMenor === 0){
-                listaMicrosRes.buscarMicroRes(i,"hacerBoolTrue");
-                listaMicrosRes.buscarMicroRes(i-1,"hacerBoolFalse");
-                IDMenor = i;
-                //console.log("Entra por primera vez. 2.1");
-            }
-            if (listaMicrosRes.buscarMicroRes(IDMenor,"TF")<=listaMicrosRes.buscarMicroRes(i,"TF") && IDMenor > i){ // Se compara la cantidad con el de menor ID
-                // Si el menor ID es menor a la posición actual
-                // IDMenor no cambia nada y el bool de la posición es falso
-                listaMicrosRes.buscarMicroRes(i,"hacerBoolFalse");
-                //console.log("IDMenor no cambia nada y el bool de la posición es falso. 2.2");
-
-            }else{
-                // IDMenor cambia junto con el bool de el IDMenor anterior y el bool de la posición actual es verdadero y el IDMenor cambia con la posición actual
+            if(listaMicrosRes.buscarMicroRes(IDMenor,"TF")>=listaMicrosRes.buscarMicroRes(i,"TF")){
                 listaMicrosRes.buscarMicroRes(IDMenor,"hacerBoolFalse");
-                //console.log("IDMenor cambia junto con el bool de el IDMenor anterior. 2.3");
-                listaMicrosRes.buscarMicroRes(i,"hacerBoolTrue");
-                IDMenor = i;
-                }
+                IDMenor=i;
+                listaMicrosRes.buscarMicroRes(IDMenor,"hacerBoolTrue");
+            }
         }
-        //console.log("ID menor: "+IDMenor);
     }
     return IDMenor;
-    //console.log(cont);
 }
 
 //sortListaMicrosRes();
@@ -876,5 +934,159 @@ function sortListaMicrosRes() {
 //listaMicrosRes.returnList();
 //listaProcesos.returnList();
 
-calcularMicros();
+function calcular() {
+    if(click==true){
+        //Se eliminan tablas anteriores
+        document.getElementById("padre").innerHTML = "";
+        document.getElementById("padre").innerHTML = "<div id=\"tablasMicros\"></div>";
+    }
+    click = true;
+    console.log("Ya entro");
+    var inputCantidadMicros = parseInt(document.getElementById("cantidadMicros").value);
+    var inputQuantum = parseInt(document.getElementById("quantum").value);
+    var inputTCC = parseInt(document.getElementById("TCC").value);
+    var inputTB = parseInt(document.getElementById("TB").value);
+    calcularMicros(inputCantidadMicros,inputQuantum,inputTCC,inputTB);
+}
+
+
+function generarTablas(cantidadMicros){
+    const $cuerpoTabla = document.querySelector("#tablasMicros");
+    // Desde aquí inicia el loop para CREAR CADA TABLA
+    for(var j=1; j<=cantidadMicros;j++){
+        const $h2 = document.createElement("h2");
+        $h2.textContent = "Micro "+j;
+        $cuerpoTabla.appendChild($h2);
+        //console.log(j);
+        const $table = document.createElement("table");
+        const $thead = document.createElement("thead");
+        const $trHead = document.createElement("tr");
+        let $thLetraProceso = document.createElement("th");
+        $thLetraProceso.textContent = "Letra Proceso";
+        $trHead.appendChild($thLetraProceso);
+        let $thTCC = document.createElement("th");
+        $thTCC.textContent = "TCC";
+        $trHead.appendChild($thTCC);
+        let $thTE = document.createElement("th");
+        $thTE.textContent = "TE";
+        $trHead.appendChild($thTE);
+        let $thTVC = document.createElement("th");
+        $thTVC.textContent = "TVC";
+        $trHead.appendChild($thTVC);
+        let $thTB = document.createElement("th");
+        $thTB.textContent = "TB";
+        $trHead.appendChild($thTB);
+        let $thTT = document.createElement("th");
+        $thTT.textContent = "TT";
+        $trHead.appendChild($thTT);
+        let $thTi = document.createElement("th");
+        $thTi.textContent = "Ti";
+        $trHead.appendChild($thTi);
+        let $thTF = document.createElement("th");
+        $thTF.textContent = "TF";
+        $trHead.appendChild($thTF);
+        // Se agregan headers
+        $thead.appendChild($trHead);
+        $table.appendChild($thead);
+        // Aquí acaba el encabezado e inicia el cuerpo de la tabla
+        const $tbody = document.createElement("tbody");
+        var contFilas =0;
+        if(listaMicrosRes.buscarMicroRes(j,"hueco")== true){
+            console.log("El micro con ID "+j+" tiene un hueco al final, no se agrega la última fila de esa tabla");
+            for(var i=1;i<=listaMicros.length();i++){
+                if(listaMicros.buscarMicro(i,"IDMicro",j) === j && listaMicrosRes.buscarMicroRes(j,"ultimo") != i){
+                    // Crear un <tr>
+                    const $tr = document.createElement("tr");
+                    // Creamos el <td> de nombre y lo adjuntamos a tr
+                    let $tdLetraProceso = document.createElement("td");
+                    $tdLetraProceso.textContent = listaMicros.buscarMicro(i,"letra",j); // el textContent del td es el nombre
+                    $tr.appendChild($tdLetraProceso);
+                    // El td de precio
+                    let $tdTCC = document.createElement("td");
+                    $tdTCC.textContent = listaMicros.buscarMicro(i,"TCC",j);
+                    $tr.appendChild($tdTCC);
+                    // El td del código
+                    let $tdTE = document.createElement("td");
+                    $tdTE.textContent = listaMicros.buscarMicro(i,"TE",j);
+                    $tr.appendChild($tdTE);
+                    let $tdTVC = document.createElement("td");
+                    $tdTVC.textContent = listaMicros.buscarMicro(i,"TVC",j);
+                    $tr.appendChild($tdTVC);
+                    // El td del código
+                    let $tdTB = document.createElement("td");
+                    $tdTB.textContent = listaMicros.buscarMicro(i,"TB",j);
+                    $tr.appendChild($tdTB);
+                    let $tdTT = document.createElement("td");
+                    $tdTT.textContent = listaMicros.buscarMicro(i,"TT",j);
+                    $tr.appendChild($tdTT);
+                    let $tdTi = document.createElement("td");
+                    $tdTi.textContent = listaMicros.buscarMicro(i,"Ti",j);
+                    $tr.appendChild($tdTi);
+                    let $tdTF = document.createElement("td");
+                    $tdTF.textContent = listaMicros.buscarMicro(i,"TF",j);
+                    $tr.appendChild($tdTF);
+                    // Finalmente agregamos el <tr> al cuerpo de la tabla
+                    $tbody.appendChild($tr);
+                    // Y el ciclo se repite hasta que se termina de recorrer toda la lista
+                    contFilas++;
+                }
+
+            }
+        }else{
+            for(var i=1;i<=listaMicros.length();i++){
+                if(listaMicros.buscarMicro(i,"IDMicro",j) === j){
+                    // Crear un <tr>
+                    const $tr = document.createElement("tr");
+                    // Creamos el <td> de nombre y lo adjuntamos a tr
+                    let $tdLetraProceso = document.createElement("td");
+                    $tdLetraProceso.textContent = listaMicros.buscarMicro(i,"letra",j); // el textContent del td es el nombre
+                    $tr.appendChild($tdLetraProceso);
+                    // El td de precio
+                    let $tdTCC = document.createElement("td");
+                    $tdTCC.textContent = listaMicros.buscarMicro(i,"TCC",j);
+                    $tr.appendChild($tdTCC);
+                    // El td del código
+                    let $tdTE = document.createElement("td");
+                    $tdTE.textContent = listaMicros.buscarMicro(i,"TE",j);
+                    $tr.appendChild($tdTE);
+                    let $tdTVC = document.createElement("td");
+                    $tdTVC.textContent = listaMicros.buscarMicro(i,"TVC",j);
+                    $tr.appendChild($tdTVC);
+                    // El td del código
+                    let $tdTB = document.createElement("td");
+                    $tdTB.textContent = listaMicros.buscarMicro(i,"TB",j);
+                    $tr.appendChild($tdTB);
+                    let $tdTT = document.createElement("td");
+                    $tdTT.textContent = listaMicros.buscarMicro(i,"TT",j);
+                    $tr.appendChild($tdTT);
+                    let $tdTi = document.createElement("td");
+                    $tdTi.textContent = listaMicros.buscarMicro(i,"Ti",j);
+                    $tr.appendChild($tdTi);
+                    let $tdTF = document.createElement("td");
+                    $tdTF.textContent = listaMicros.buscarMicro(i,"TF",j);
+                    $tr.appendChild($tdTF);
+                    // Finalmente agregamos el <tr> al cuerpo de la tabla
+                    $tbody.appendChild($tr);
+                    // Y el ciclo se repite hasta que se termina de recorrer toda la lista
+                    contFilas++;
+                }
+
+            }
+        }
+        // Aquí va el loop para agregar la ingormación de la tabla
+
+
+        // Se agrega el cuerpo a la tabla
+        $table.appendChild($tbody);
+
+        // Se agrega la tabla al DIV
+        $cuerpoTabla.appendChild($table);
+
+        const $br = document.createElement("br");
+        $cuerpoTabla.appendChild($br);
+    }
+
+}
+
 listaMicros.returnList();
+listaMicrosRes.returnList();
