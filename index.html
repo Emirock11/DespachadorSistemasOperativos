@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Despachador</title>
+        <link href="styles.css" rel="stylesheet" type="text/css"/>
+
+    </head>
+    <body>
+        <ul>
+            <li>Emiliano Antonio Pineda Hernández <span>A01332517</span></li>
+            <li>Mauricio Acosta Hernández <span>A01339392</span></li>
+            <li>Carlos Eduardo Pinilla López <span>A01334369</span></li>
+        </ul>
+        <h1>Despachador</h1>
+        
+        <div class="input">
+            <p>Cantidad de Microprocesadores:</p>
+            <input type="text" id="cantidadMicros">
+        </div>
+        <div class="input">
+            <p>Quantum:</p>
+            <input type="text" id="quantum">
+            <p>ms</p>
+        </div>
+        <div class="input">
+            <p>Tiempo para cambio de contexto:</p>
+            <input type="text" id="TCC">
+            <p>ms</p>
+        </div>
+        <div class="input">
+            <p>Cantidad de bloqueo:</p>
+            <input type="text" id="TB">
+            <p>bloqueos</p>
+        </div>
+        <div class="datos">
+            <h5>Tiempos</h5>
+            <ol type="A">
+                <li>400 ms</li>
+                <li>300 ms</li>
+                <li>50 ms</li>
+                <li>100 ms</li>
+                <li>1000 ms</li>
+                <li>500 ms</li>
+                <li>100 ms</li>
+                <li>700 ms</li>
+                <li>1000 ms</li>
+                <li>450 ms</li>
+                <li>300 ms</li>
+                <li>100 ms</li>
+                <li>3000 ms</li>
+                <li>80 ms</li>
+                <li>50 ms</li>
+                <li>500 ms</li>
+                <li>600 ms</li>
+                <li>800 ms</li>
+            </ol>
+        </div>
+        <input type="button" id="btn" onclick="calcular()" value="Calcular">
+
+        <div id="padre">
+            <div id="tablasMicros">
+
+            </div>
+        </div>
+
+        <script type="text/javascript" src="Calculos.js">
+
+        </script>
+    </body>
+</html>

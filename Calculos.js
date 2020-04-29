@@ -833,7 +833,7 @@ function calcularMicros(cantidadMicros, quantum, TCC, TB){
                     listaMicrosRes.actualizarTF(j, TF);
                     listaMicrosRes.actualizarUltimoElementoID(j, i + contHuecos);
                     listaMicrosRes.ultimoElementoHueco(j,"verdadero");
-                    var objetoMicros = new Micros(i + contHuecos, "-", "-", TE, "-", "-", TE, Ti, TF, j,false, true);
+                    var objetoMicros = new Micros(i + contHuecos, "-", "-", "-", "-", "-", TE, Ti, TF, j,false, true);
                     listaMicros.append(objetoMicros)
                     contHuecos++;
                     //console.log("huecos: "+contHuecos);

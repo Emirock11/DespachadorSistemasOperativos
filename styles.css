@@ -1,0 +1,75 @@
+body{
+    background-color: #1d1e1f;
+    color: #fafcff;
+    font-family: sans-serif;
+}
+
+h1{
+    text-align: center;
+    font-size: 3rem;
+}
+
+ul li{
+    margin: 0;
+    display: inline;
+    font-size: 1rem;
+    margin-right: 0.2rem;
+}
+
+ul li span{
+    font-size: 0.75rem;
+}
+
+.input p{
+    display: inline-block;
+}
+
+.input input{
+    display: inline-block;
+    background-color: #1d1e1f;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    width: 50px;
+    margin-left: 0.25em;
+}
+
+.input input[type=text]{
+    color: #fafcff;
+    font-size: 1.2em;
+    text-align: center;
+}
+
+.input input:focus{
+    outline: none;
+}
+
+th{
+    font-weight: bold;
+}
+
+table, th, td {
+    border: 1px solid white;
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+}
+
+#btn{
+    margin: 1em;
+    padding: 1em;
+    border-radius: 40%;
+    border: none;
+}
+
+#btn:hover{
+    color: white;
+    background-color: gray;
+    cursor: pointer;
+}
+
+.datos{
+    float: right;
+}
