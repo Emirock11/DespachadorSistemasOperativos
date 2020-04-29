@@ -234,6 +234,8 @@ LinkedList.prototype.buscarMicroRes = function ( ID, queHacer,current= this.head
                 return current.value.TF;
             }else if(queHacer === "ultimo"){
                 return current.value.ultimoElementoID;
+            }else if(queHacer === "contieneDatos"){
+                return current.value.contieneDatos;
             }
 
         }
@@ -257,6 +259,8 @@ LinkedList.prototype.buscarMicroRes = function ( ID, queHacer,current= this.head
             return current.value.TF;
         }else if(queHacer === "ultimo"){
             return current.value.ultimoElementoID;
+        }else if(queHacer === "contieneDatos"){
+            return current.value.contieneDatos;
         }
     }
 }
@@ -341,6 +345,39 @@ LinkedList.prototype.actualizarUltimoElementoID = function ( ID, ultimoElementoI
     }
 }
 
+LinkedList.prototype.ultimoElementoHueco = function ( ID, queHacer, current= this.head){
+    if(this.head === null){
+        return 0
+    }
+    if (current.next !== null){ //El penúltimo
+        if(current.value.ID === ID){ //Si coincide con el minMs a buscar con el valor que estamos posicionados
+            if (queHacer === "verdadero"){
+                return current.value.ultimoElementoHueco = true;
+            }
+            if (queHacer === "falso"){
+                return current.value.ultimoElementoHueco = false;
+            }
+            if (queHacer === "regresarValor"){
+                return current.value.ultimoElementoHueco;
+            }
+
+        }
+        return this.ultimoElementoHueco(ID, queHacer,current.next); //Si no coincide con el minMS a buscar, va a seguir buscando
+    }
+
+    if(current.value.ID === ID){ //Si coincide con el minMs a buscar con el valor que estamos posicionados
+        if (queHacer === "verdadero"){
+            return current.value.ultimoElementoHueco = true;
+        }
+        if (queHacer === "falso"){
+            return current.value.ultimoElementoHueco = false;
+        }
+        if (queHacer === "regresarValor"){
+            return current.value.ultimoElementoHueco;
+        }
+    }
+}
+
 LinkedList.prototype.buscarMicro = function ( ID, aBuscar, IDMicro, current= this.head){
     if(this.head === null){
         return 0
@@ -374,6 +411,12 @@ LinkedList.prototype.buscarMicro = function ( ID, aBuscar, IDMicro, current= thi
             if(aBuscar === "IDMicro"){
                 return current.value.IDMicro;
             }
+            if(aBuscar === "ignorar"){
+                return  current.value.ignorar;
+            }
+            if(aBuscar === "hueco"){
+                return  current.value.hueco;
+            }
         }
         return this.buscarMicro(ID, aBuscar, IDMicro,current.next); //Si no coincide con el minMS a buscar, va a seguir buscando
     }
@@ -406,10 +449,51 @@ LinkedList.prototype.buscarMicro = function ( ID, aBuscar, IDMicro, current= thi
         if(aBuscar === "IDMicro"){
             return current.value.IDMicro;
         }
+        if(aBuscar === "ignorar"){
+            return  current.value.ignorar;
+        }
+        if(aBuscar === "hueco"){
+            return  current.value.hueco;
+        }
     }
 }
 
+LinkedList.prototype.ignorarMicro = function ( ID, aHacer, IDMicro, current= this.head){
+    if(this.head === null){
+        return 0
+    }
+    if (current.next !== null){
+        if(current.value.ID === ID && current.value.IDMicro === IDMicro){
+            if(aHacer === "ignorar") {
+                return current.value.ignorar = true;
+                console.log("Entró")
+            }
+        }
+        return this.ignorarMicro(ID, aHacer, IDMicro,current.next); //Si no coincide con el minMS a buscar, va a seguir buscando
+    }
 
+    if(current.value.ID === ID && current.value.IDMicro === IDMicro){ // El último valor de la lista
+        if(aHacer === "ignorar") {
+            return current.value.ignorar = true;
+        }
+    }
+}
+
+LinkedList.prototype.contieneDatos = function ( ID, current= this.head){
+    if(this.head === null){
+        return 0
+    }
+    if (current.next !== null){
+        if(current.value.ID === ID){
+                return current.value.contieneDatos = true;
+        }
+        return this.contieneDatos(ID, current.next); //Si no coincide con el minMS a buscar, va a seguir buscando
+    }
+
+    if(current.value.ID === ID){ // El último valor de la lista
+        return current.value.contieneDatos = true;
+    }
+}
 
 // --------------------------------------------Creación de las listas ----------------------------------------------
 
@@ -449,7 +533,7 @@ function Cola(ID, letraCola, msMin){
     this.msMin = msMin;
 }
 
-function Micros(ID, letraMicros, TCC, TE, TVC, TB, TT, Ti, TF, IDMicro){
+function Micros(ID, letraMicros, TCC, TE, TVC, TB, TT, Ti, TF, IDMicro, ignorar, hueco){
     this.ID = ID;
     this.letraMicros =letraMicros;
     this.TCC=TCC;
@@ -460,14 +544,18 @@ function Micros(ID, letraMicros, TCC, TE, TVC, TB, TT, Ti, TF, IDMicro){
     this.Ti=Ti;
     this.TF=TF;
     this.IDMicro=IDMicro;
+    this.ignorar = ignorar;
+    this.hueco = hueco;
 }
 
-function microsResumen(ID, TF, elMenor, hueco, ultimoElementoID){
+function microsResumen(ID, TF, elMenor, hueco, ultimoElementoID, contieneDatos, ultimoElementoHueco){
     this.ID = ID;
     this.TF = TF;
     this.elMenor = elMenor;
     this.hueco = hueco;
     this.ultimoElementoID = ultimoElementoID;
+    this.contieneDatos = contieneDatos;
+    this.ultimoElementoHueco = ultimoElementoHueco;
 }
 
 // ------------------------------------------------------- Procesamiento del documento de texto ----------------------------------------------------------------
@@ -650,156 +738,8 @@ for (i =0; i<txt.length ; i++){
 }
 //listaProcesos.returnList();
 // ------------------------------------------------------------- Creación de las tablas ----------------------------------------------------------------
-/*
-// Creación de la tabla de procesos
-const $tablaProcesos = document.querySelector("#tablaProcesos");
-// Recorrer todos los productos
-for(var i=0;i<listaProcesos.length()+1;i++){
-    // Crear un <tr>
-    const $tr = document.createElement("tr");
-    // Creamos el <td> de nombre y lo adjuntamos a tr
-    let $tdLetra = document.createElement("td");
-    $tdLetra.textContent = listaProcesos.buscarProceso(i,"letra"); // el textContent del td es el nombre
-    $tr.appendChild($tdLetra);
-    // El td de precio
-    let $tdTiempo = document.createElement("td");
-    $tdTiempo.textContent = listaProcesos.buscarProceso(i,"tiempo");
-    $tr.appendChild($tdTiempo);
-    // El td del código
-    let $tdBloqueos = document.createElement("td");
-    $tdBloqueos.textContent = listaProcesos.buscarProceso(i,"cantidad");
-    $tr.appendChild($tdBloqueos);
-    // Finalmente agregamos el <tr> al cuerpo de la tabla
-    $tablaProcesos.appendChild($tr);
-    // Y el ciclo se repite hasta que se termina de recorrer todo el arreglo
-}
 
-// Creación de la tabla de los bloqueos
-const $tablaBloqueos = document.querySelector("#tablaBloqueos");
-// Recorrer todos los productos
-for(var i=1;i<listaBloqueos.length()+1;i++){
-    // Crear un <tr>
-    const $tr = document.createElement("tr");
-    // Creamos el <td> del rango y lo adjuntamos a tr
-    let $tdRango = document.createElement("td");
-    $tdRango.textContent =listaBloqueos.buscarBloqueo(i,"min")+" ms a "+listaBloqueos.buscarBloqueo(i,"max")+" ms"; // el textContent del td es el nombre
-    $tr.appendChild($tdRango);
-    // El td de la cantidad de veces de los bloqueos
-    let $tdCantidad = document.createElement("td");
-    $tdCantidad.textContent = listaBloqueos.buscarBloqueo(i,"cantidad");
-    $tr.appendChild($tdCantidad);
-    // Finalmente agregamos el <tr> al cuerpo de la tabla
-    $tablaBloqueos.appendChild($tr);
-    // Y el ciclo se repite hasta que se termina de recorrer todo el arreglo
-}
 
-// Creación de la tabla de los entornos
-const $tablaEntornos = document.querySelector("#tablaEntornos");
-// Recorrer toda la lista
-var posicion = 1;
-var contTablaEntornos = 1;
-for(var i=0;i<listaEntornos.length()*6;i++){
-    if(posicion === 1) {
-        const $tr = document.createElement("tr");
-        // Creamos el <td> del rango y lo adjuntamos a tr
-        let $tdDato = document.createElement("td");
-        $tdDato.textContent = "Entorno"; // el textContent del td es el nombre
-        $tr.appendChild($tdDato);
-        // El td de la cantidad de veces de los bloqueos
-        let $tdCantidad = document.createElement("td");
-        $tdCantidad.textContent = contTablaEntornos;
-        $tr.appendChild($tdCantidad);
-        // Finalmente agregamos el <tr> al cuerpo de la tabla
-        $tablaEntornos.appendChild($tr);
-        // Y el ciclo se repite hasta que se termina de recorrer todo el arreglo
-        posicion++;
-    }else if(posicion === 2){
-
-        // Crear un <tr>
-        const $tr = document.createElement("tr");
-        // Creamos el <td> del rango y lo adjuntamos a tr
-        let $tdDato = document.createElement("td");
-        $tdDato.textContent = "CPU"; // el textContent del td es el nombre
-        $tr.appendChild($tdDato);
-        // El td de la cantidad de veces de los bloqueos
-        let $tdCantidad = document.createElement("td");
-        $tdCantidad.textContent = listaEntornos.buscarEntorno(contTablaEntornos,"CPU");
-        $tr.appendChild($tdCantidad);
-        // Finalmente agregamos el <tr> al cuerpo de la tabla
-        $tablaEntornos.appendChild($tr);
-        // Y el ciclo se repite hasta que se termina de recorrer todo el arreglo
-        posicion++;
-
-    }else if(posicion === 3){
-        // Crear un <tr>
-        const $tr = document.createElement("tr");
-        // Creamos el <td> del rango y lo adjuntamos a tr
-        let $tdDato = document.createElement("td");
-        $tdDato.textContent = "Cambio"; // el textContent del td es el nombre
-        $tr.appendChild($tdDato);
-        // El td de la cantidad de veces de los bloqueos
-        let $tdCantidad = document.createElement("td");
-        $tdCantidad.textContent = listaEntornos.buscarEntorno(contTablaEntornos,"cambios") + " ms";
-        $tr.appendChild($tdCantidad);
-        // Finalmente agregamos el <tr> al cuerpo de la tabla
-        $tablaEntornos.appendChild($tr);
-        // Y el ciclo se repite hasta que se termina de recorrer todo el arreglo
-        posicion++;
-
-    }else if(posicion === 4){
-        // Crear un <tr>
-        const $tr = document.createElement("tr");
-        // Creamos el <td> del rango y lo adjuntamos a tr
-        let $tdDato = document.createElement("td");
-        $tdDato.textContent = "Bloqueo"; // el textContent del td es el nombre
-        $tr.appendChild($tdDato);
-        // El td de la cantidad de veces de los bloqueos
-        let $tdCantidad = document.createElement("td");
-        $tdCantidad.textContent = listaEntornos.buscarEntorno(contTablaEntornos,"bloqueo") + " ms";
-        $tr.appendChild($tdCantidad);
-        // Finalmente agregamos el <tr> al cuerpo de la tabla
-        $tablaEntornos.appendChild($tr);
-        // Y el ciclo se repite hasta que se termina de recorrer todo el arreglo
-        posicion++;
-
-    }if(posicion === 5 && contTablaEntornos<listaEntornos.length()){
-        // Crear un <tr>
-        const $tr = document.createElement("tr");
-        // Creamos el <td> del rango y lo adjuntamos a tr
-        let $tdDato = document.createElement("td");
-        $tdDato.textContent = " - "; // el textContent del td es el nombre
-        $tr.appendChild($tdDato);
-        // El td de la cantidad de veces de los bloqueos
-        let $tdCantidad = document.createElement("td");
-        $tdCantidad.textContent =" - ";
-        $tr.appendChild($tdCantidad);
-        // Finalmente agregamos el <tr> al cuerpo de la tabla
-        $tablaEntornos.appendChild($tr);
-        // Y el ciclo se repite hasta que se termina de recorrer todo el arreglo
-        posicion = 1;
-        contTablaEntornos++;
-
-    };
-}
-
-// Creación de la tabla de la cola
-const $tablaCola = document.querySelector("#tablaCola");
-// Recorrer todos los productos
-for(var i=1;i<listaCola.length()+1;i++){
-    // Crear un <tr>
-    const $tr = document.createElement("tr");
-    // Creamos el <td> del rango y lo adjuntamos a tr
-    let $tdMs = document.createElement("td");
-    $tdMs.textContent =listaCola.buscarCola(i,"ms")+" ms"; // el textContent del td es el nombre
-    $tr.appendChild($tdMs);
-    // El td de la cantidad de veces de los bloqueos
-    let $tdLetra = document.createElement("td");
-    $tdLetra.textContent = listaCola.buscarCola(i,"letra");
-    $tr.appendChild($tdLetra);
-    // Finalmente agregamos el <tr> al cuerpo de la tabla
-    $tablaCola.appendChild($tr);
-    // Y el ciclo se repite hasta que se termina de recorrer todo el arreglo
-}*/
 
 
 // Datos de entrada
@@ -829,7 +769,7 @@ function calcularMicros(cantidadMicros, quantum, TCC, TB){
     var TCCCalcular,TE,TVC,TBCalcular,TT,Ti,TF;
     var contHuecos = 0, cambioMs = false, IDTemp;
     for(i=1;i<=cantidadMicros;i++) {
-        var objetoMicroRes = new microsResumen(i, 0, false, true, 0);
+        var objetoMicroRes = new microsResumen(i, 0, false, true, 0, false, false);
         listaMicrosRes.append(objetoMicroRes);
     }
 
@@ -861,7 +801,7 @@ function calcularMicros(cantidadMicros, quantum, TCC, TB){
             // Sacamos el Tiempo de la letra y lo guardamos en la variable TE
             TE = listaProcesos.buscarProcesoPorLetra(letraActual,"tiempo");
             // Sacamos el TVC
-            TVC = (Math.ceil(TE/quantum)-1)*15;//(Math.ceil(TE / quantum)-1)*TCC
+            TVC = (Math.ceil(TE/quantum)-1)*TCC;//(Math.ceil(TE / quantum)-1)*TCC
             // Sacamos el tiempo de bloqueo multiplicando la cantidad de veces en las que se utilizará el bloqueo por los ms propuestos en el entorno
             TBCalcular = listaProcesos.buscarProcesoPorLetra(letraActual,"cantidad")*TB;
             // Sacamos el tiempo total
@@ -869,33 +809,40 @@ function calcularMicros(cantidadMicros, quantum, TCC, TB){
             // Establecemos el tiempo inicial con el tiempo final pasado de la micro en donde estamos actualmente
             Ti = listaMicrosRes.buscarMicroRes(IDMenorTFMicro,"TF");
             TF = TT + Ti;
-            var objetoMicros = new Micros(i+contHuecos,letraActual,TCCCalcular,TE,TVC,TBCalcular,TT,Ti,TF,IDMenorTFMicro);
+            var objetoMicros = new Micros(i+contHuecos,letraActual,TCCCalcular,TE,TVC,TBCalcular,TT,Ti,TF,IDMenorTFMicro,false,false);
 
             listaMicrosRes.actualizarTF(IDMenorTFMicro,TF);
             listaMicrosRes.actualizarUltimoElementoID(IDMenorTFMicro,i+contHuecos);
-            //console.log("Depues - ID. "+IDMenorTFMicro+" TF:"+TF);
-            //listaMicrosRes.returnList();
+            listaMicrosRes.contieneDatos(IDMenorTFMicro);
+            listaMicrosRes.ultimoElementoHueco(IDMenorTFMicro,"falso");
             listaMicros.append(objetoMicros);
         }else{
+            //listaMicrosRes.returnList();
             // Nos posicionamos desde el micro 1
             for(var j=1; j<=listaMicrosRes.length();j++){
-                if(listaMicrosRes.buscarMicroRes(j,"TF")<listaCola.buscarCola(i,"ms")){
-                    // Si se hace un hueco
-                    TE=listaCola.buscarCola(i,"ms")-listaMicrosRes.buscarMicroRes(j,"TF");
-                    listaMicrosRes.buscarMicroRes(j,"hacerHuecoTrue");
-                    Ti = listaMicrosRes.buscarMicroRes(j,"TF"); // Actualizar Ti
-                    TF = listaCola.buscarCola(i,"ms");
-                    listaMicrosRes.actualizarTF(j,TF);
-                    listaMicrosRes.actualizarUltimoElementoID(j,i+contHuecos);
-                    var objetoMicros = new Micros(i+contHuecos,"-","-",TE,"-","-",TE,Ti,TF,j);
+                if (listaMicrosRes.buscarMicroRes(j, "TF") < listaCola.buscarCola(i, "ms")) {
+                    if(listaMicrosRes.ultimoElementoHueco(j,"regresarValor") === true){ //Si la última variable ingresada fue un hueco...
+                        listaMicros.ignorarMicro(listaMicrosRes.buscarMicroRes(j,"ultimo"),"ignorar",j);
 
-                    listaMicros.append(objetoMicros);
+                    }
+                    // Si se hace un hueco
+                    TE = listaCola.buscarCola(i, "ms") - listaMicrosRes.buscarMicroRes(j, "TF");
+                    listaMicrosRes.buscarMicroRes(j, "hacerHuecoTrue");
+                    Ti = listaMicrosRes.buscarMicroRes(j, "TF"); // Actualizar Ti
+                    TF = listaCola.buscarCola(i, "ms");
+                    listaMicrosRes.actualizarTF(j, TF);
+                    listaMicrosRes.actualizarUltimoElementoID(j, i + contHuecos);
+                    listaMicrosRes.ultimoElementoHueco(j,"verdadero");
+                    var objetoMicros = new Micros(i + contHuecos, "-", "-", TE, "-", "-", TE, Ti, TF, j,false, true);
+                    listaMicros.append(objetoMicros)
                     contHuecos++;
                     //console.log("huecos: "+contHuecos);
-                    cambioMs = true;
-                    IDTemp = sortListaMicrosRes();
                     i--;
                 }
+
+                cambioMs = true;
+                IDTemp = sortListaMicrosRes();
+
             }
         }
     }
@@ -926,13 +873,6 @@ function sortListaMicrosRes(){
     return IDMenor;
 }
 
-//sortListaMicrosRes();
-
-//calcularMicro();
-
-//listaMicros.returnList();
-//listaMicrosRes.returnList();
-//listaProcesos.returnList();
 
 function calcular() {
     if(click==true){
@@ -941,7 +881,6 @@ function calcular() {
         document.getElementById("padre").innerHTML = "<div id=\"tablasMicros\"></div>";
     }
     click = true;
-    console.log("Ya entro");
     var inputCantidadMicros = parseInt(document.getElementById("cantidadMicros").value);
     var inputQuantum = parseInt(document.getElementById("quantum").value);
     var inputTCC = parseInt(document.getElementById("TCC").value);
@@ -951,142 +890,146 @@ function calcular() {
 
 
 function generarTablas(cantidadMicros){
+    console.log("Cantidad de micros: "+cantidadMicros);
+    listaMicrosRes.returnList();
     const $cuerpoTabla = document.querySelector("#tablasMicros");
     // Desde aquí inicia el loop para CREAR CADA TABLA
     for(var j=1; j<=cantidadMicros;j++){
-        const $h2 = document.createElement("h2");
-        $h2.textContent = "Micro "+j;
-        $cuerpoTabla.appendChild($h2);
-        //console.log(j);
-        const $table = document.createElement("table");
-        const $thead = document.createElement("thead");
-        const $trHead = document.createElement("tr");
-        let $thLetraProceso = document.createElement("th");
-        $thLetraProceso.textContent = "Letra Proceso";
-        $trHead.appendChild($thLetraProceso);
-        let $thTCC = document.createElement("th");
-        $thTCC.textContent = "TCC";
-        $trHead.appendChild($thTCC);
-        let $thTE = document.createElement("th");
-        $thTE.textContent = "TE";
-        $trHead.appendChild($thTE);
-        let $thTVC = document.createElement("th");
-        $thTVC.textContent = "TVC";
-        $trHead.appendChild($thTVC);
-        let $thTB = document.createElement("th");
-        $thTB.textContent = "TB";
-        $trHead.appendChild($thTB);
-        let $thTT = document.createElement("th");
-        $thTT.textContent = "TT";
-        $trHead.appendChild($thTT);
-        let $thTi = document.createElement("th");
-        $thTi.textContent = "Ti";
-        $trHead.appendChild($thTi);
-        let $thTF = document.createElement("th");
-        $thTF.textContent = "TF";
-        $trHead.appendChild($thTF);
-        // Se agregan headers
-        $thead.appendChild($trHead);
-        $table.appendChild($thead);
-        // Aquí acaba el encabezado e inicia el cuerpo de la tabla
-        const $tbody = document.createElement("tbody");
-        var contFilas =0;
-        if(listaMicrosRes.buscarMicroRes(j,"hueco")== true){
-            console.log("El micro con ID "+j+" tiene un hueco al final, no se agrega la última fila de esa tabla");
-            for(var i=1;i<=listaMicros.length();i++){
-                if(listaMicros.buscarMicro(i,"IDMicro",j) === j && listaMicrosRes.buscarMicroRes(j,"ultimo") != i){
-                    // Crear un <tr>
-                    const $tr = document.createElement("tr");
-                    // Creamos el <td> de nombre y lo adjuntamos a tr
-                    let $tdLetraProceso = document.createElement("td");
-                    $tdLetraProceso.textContent = listaMicros.buscarMicro(i,"letra",j); // el textContent del td es el nombre
-                    $tr.appendChild($tdLetraProceso);
-                    // El td de precio
-                    let $tdTCC = document.createElement("td");
-                    $tdTCC.textContent = listaMicros.buscarMicro(i,"TCC",j);
-                    $tr.appendChild($tdTCC);
-                    // El td del código
-                    let $tdTE = document.createElement("td");
-                    $tdTE.textContent = listaMicros.buscarMicro(i,"TE",j);
-                    $tr.appendChild($tdTE);
-                    let $tdTVC = document.createElement("td");
-                    $tdTVC.textContent = listaMicros.buscarMicro(i,"TVC",j);
-                    $tr.appendChild($tdTVC);
-                    // El td del código
-                    let $tdTB = document.createElement("td");
-                    $tdTB.textContent = listaMicros.buscarMicro(i,"TB",j);
-                    $tr.appendChild($tdTB);
-                    let $tdTT = document.createElement("td");
-                    $tdTT.textContent = listaMicros.buscarMicro(i,"TT",j);
-                    $tr.appendChild($tdTT);
-                    let $tdTi = document.createElement("td");
-                    $tdTi.textContent = listaMicros.buscarMicro(i,"Ti",j);
-                    $tr.appendChild($tdTi);
-                    let $tdTF = document.createElement("td");
-                    $tdTF.textContent = listaMicros.buscarMicro(i,"TF",j);
-                    $tr.appendChild($tdTF);
-                    // Finalmente agregamos el <tr> al cuerpo de la tabla
-                    $tbody.appendChild($tr);
-                    // Y el ciclo se repite hasta que se termina de recorrer toda la lista
-                    contFilas++;
-                }
+        if(listaMicrosRes.buscarMicroRes(j,"contieneDatos") === true){
+            console.log("Entró al micro "+j)
+            const $h2 = document.createElement("h2");
+            $h2.textContent = "Micro "+j;
+            $cuerpoTabla.appendChild($h2);
+            //console.log(j);
+            const $table = document.createElement("table");
+            const $thead = document.createElement("thead");
+            const $trHead = document.createElement("tr");
+            let $thLetraProceso = document.createElement("th");
+            $thLetraProceso.textContent = "Letra Proceso";
+            $trHead.appendChild($thLetraProceso);
+            let $thTCC = document.createElement("th");
+            $thTCC.textContent = "TCC";
+            $trHead.appendChild($thTCC);
+            let $thTE = document.createElement("th");
+            $thTE.textContent = "TE";
+            $trHead.appendChild($thTE);
+            let $thTVC = document.createElement("th");
+            $thTVC.textContent = "TVC";
+            $trHead.appendChild($thTVC);
+            let $thTB = document.createElement("th");
+            $thTB.textContent = "TB";
+            $trHead.appendChild($thTB);
+            let $thTT = document.createElement("th");
+            $thTT.textContent = "TT";
+            $trHead.appendChild($thTT);
+            let $thTi = document.createElement("th");
+            $thTi.textContent = "Ti";
+            $trHead.appendChild($thTi);
+            let $thTF = document.createElement("th");
+            $thTF.textContent = "TF";
+            $trHead.appendChild($thTF);
+            // Se agregan headers
+            $thead.appendChild($trHead);
+            $table.appendChild($thead);
+            // Aquí acaba el encabezado e inicia el cuerpo de la tabla
+            const $tbody = document.createElement("tbody");
+            var contFilas =0;
+            if(listaMicrosRes.buscarMicroRes(j,"hueco") === true){
+                for(var i=1;i<=listaMicros.length();i++){
+                    if(listaMicros.buscarMicro(i,"IDMicro",j) === j && listaMicrosRes.buscarMicroRes(j,"ultimo") != i && listaMicros.buscarMicro(i,"ignorar",j) === false){
+                        // Crear un <tr>
+                        const $tr = document.createElement("tr");
+                        // Creamos el <td> de nombre y lo adjuntamos a tr
+                        let $tdLetraProceso = document.createElement("td");
+                        $tdLetraProceso.textContent = listaMicros.buscarMicro(i,"letra",j); // el textContent del td es el nombre
+                        $tr.appendChild($tdLetraProceso);
+                        // El td de precio
+                        let $tdTCC = document.createElement("td");
+                        $tdTCC.textContent = listaMicros.buscarMicro(i,"TCC",j);
+                        $tr.appendChild($tdTCC);
+                        // El td del código
+                        let $tdTE = document.createElement("td");
+                        $tdTE.textContent = listaMicros.buscarMicro(i,"TE",j);
+                        $tr.appendChild($tdTE);
+                        let $tdTVC = document.createElement("td");
+                        $tdTVC.textContent = listaMicros.buscarMicro(i,"TVC",j);
+                        $tr.appendChild($tdTVC);
+                        // El td del código
+                        let $tdTB = document.createElement("td");
+                        $tdTB.textContent = listaMicros.buscarMicro(i,"TB",j);
+                        $tr.appendChild($tdTB);
+                        let $tdTT = document.createElement("td");
+                        $tdTT.textContent = listaMicros.buscarMicro(i,"TT",j);
+                        $tr.appendChild($tdTT);
+                        let $tdTi = document.createElement("td");
+                        $tdTi.textContent = listaMicros.buscarMicro(i,"Ti",j);
+                        $tr.appendChild($tdTi);
+                        let $tdTF = document.createElement("td");
+                        $tdTF.textContent = listaMicros.buscarMicro(i,"TF",j);
+                        $tr.appendChild($tdTF);
+                        // Finalmente agregamos el <tr> al cuerpo de la tabla
+                        $tbody.appendChild($tr);
+                        // Y el ciclo se repite hasta que se termina de recorrer toda la lista
+                        contFilas++;
+                    }
 
-            }
-        }else{
-            for(var i=1;i<=listaMicros.length();i++){
-                if(listaMicros.buscarMicro(i,"IDMicro",j) === j){
-                    // Crear un <tr>
-                    const $tr = document.createElement("tr");
-                    // Creamos el <td> de nombre y lo adjuntamos a tr
-                    let $tdLetraProceso = document.createElement("td");
-                    $tdLetraProceso.textContent = listaMicros.buscarMicro(i,"letra",j); // el textContent del td es el nombre
-                    $tr.appendChild($tdLetraProceso);
-                    // El td de precio
-                    let $tdTCC = document.createElement("td");
-                    $tdTCC.textContent = listaMicros.buscarMicro(i,"TCC",j);
-                    $tr.appendChild($tdTCC);
-                    // El td del código
-                    let $tdTE = document.createElement("td");
-                    $tdTE.textContent = listaMicros.buscarMicro(i,"TE",j);
-                    $tr.appendChild($tdTE);
-                    let $tdTVC = document.createElement("td");
-                    $tdTVC.textContent = listaMicros.buscarMicro(i,"TVC",j);
-                    $tr.appendChild($tdTVC);
-                    // El td del código
-                    let $tdTB = document.createElement("td");
-                    $tdTB.textContent = listaMicros.buscarMicro(i,"TB",j);
-                    $tr.appendChild($tdTB);
-                    let $tdTT = document.createElement("td");
-                    $tdTT.textContent = listaMicros.buscarMicro(i,"TT",j);
-                    $tr.appendChild($tdTT);
-                    let $tdTi = document.createElement("td");
-                    $tdTi.textContent = listaMicros.buscarMicro(i,"Ti",j);
-                    $tr.appendChild($tdTi);
-                    let $tdTF = document.createElement("td");
-                    $tdTF.textContent = listaMicros.buscarMicro(i,"TF",j);
-                    $tr.appendChild($tdTF);
-                    // Finalmente agregamos el <tr> al cuerpo de la tabla
-                    $tbody.appendChild($tr);
-                    // Y el ciclo se repite hasta que se termina de recorrer toda la lista
-                    contFilas++;
                 }
+            }else{
+                for(var i=1;i<=listaMicros.length();i++){
+                    if(listaMicros.buscarMicro(i,"IDMicro",j) === j){
+                        // Crear un <tr>
+                        const $tr = document.createElement("tr");
+                        // Creamos el <td> de nombre y lo adjuntamos a tr
+                        let $tdLetraProceso = document.createElement("td");
+                        $tdLetraProceso.textContent = listaMicros.buscarMicro(i,"letra",j); // el textContent del td es el nombre
+                        $tr.appendChild($tdLetraProceso);
+                        // El td de precio
+                        let $tdTCC = document.createElement("td");
+                        $tdTCC.textContent = listaMicros.buscarMicro(i,"TCC",j);
+                        $tr.appendChild($tdTCC);
+                        // El td del código
+                        let $tdTE = document.createElement("td");
+                        $tdTE.textContent = listaMicros.buscarMicro(i,"TE",j);
+                        $tr.appendChild($tdTE);
+                        let $tdTVC = document.createElement("td");
+                        $tdTVC.textContent = listaMicros.buscarMicro(i,"TVC",j);
+                        $tr.appendChild($tdTVC);
+                        // El td del código
+                        let $tdTB = document.createElement("td");
+                        $tdTB.textContent = listaMicros.buscarMicro(i,"TB",j);
+                        $tr.appendChild($tdTB);
+                        let $tdTT = document.createElement("td");
+                        $tdTT.textContent = listaMicros.buscarMicro(i,"TT",j);
+                        $tr.appendChild($tdTT);
+                        let $tdTi = document.createElement("td");
+                        $tdTi.textContent = listaMicros.buscarMicro(i,"Ti",j);
+                        $tr.appendChild($tdTi);
+                        let $tdTF = document.createElement("td");
+                        $tdTF.textContent = listaMicros.buscarMicro(i,"TF",j);
+                        $tr.appendChild($tdTF);
+                        // Finalmente agregamos el <tr> al cuerpo de la tabla
+                        $tbody.appendChild($tr);
+                        // Y el ciclo se repite hasta que se termina de recorrer toda la lista
+                        contFilas++;
+                    }
 
+                }
             }
+            // Aquí va el loop para agregar la ingormación de la tabla
+
+
+            // Se agrega el cuerpo a la tabla
+            $table.appendChild($tbody);
+
+            // Se agrega la tabla al DIV
+            $cuerpoTabla.appendChild($table);
+
+            const $br = document.createElement("br");
+            $cuerpoTabla.appendChild($br);
         }
-        // Aquí va el loop para agregar la ingormación de la tabla
 
 
-        // Se agrega el cuerpo a la tabla
-        $table.appendChild($tbody);
-
-        // Se agrega la tabla al DIV
-        $cuerpoTabla.appendChild($table);
-
-        const $br = document.createElement("br");
-        $cuerpoTabla.appendChild($br);
     }
-
 }
 
-listaMicros.returnList();
-listaMicrosRes.returnList();
+
