@@ -5,7 +5,7 @@ var fileRuta = 'Doc.txt';
 var i=0;
 var j=0;
 var palabra = "";
-var letra="",numCola;
+var letra="";
 var maxMs, minMs, numVeces, quantum,click=false;
 
 // ---------------------------------------------- Listas Ligadas -----------------------------------------------------
@@ -499,8 +499,6 @@ LinkedList.prototype.contieneDatos = function ( ID, current= this.head){
 
 var listaBloqueos = new LinkedList();
 var listaProcesos = new LinkedList();
-
-var listaEntornos = new LinkedList();
 var listaCola = new LinkedList();
 
 
@@ -566,7 +564,6 @@ var txt = archivoTxt.responseText;
 for (i =0; i<txt.length ; i++){
     arrayData.push(txt[i]);
     palabra=palabra+txt[i];
-
     if(palabra === "Tiempos"){
         var contID = 1;
         //console.log("Aquí van los tiempos de los procesos");
@@ -607,10 +604,7 @@ for (i =0; i<txt.length ; i++){
             }
             j=j+5;
         }
-
     }else if (palabra === "Bloqueos"){
-        // Ya Funciona, No mover nada de aquí xd
-        // console.log("Aquí va la cantidad de bloqueos\n");
         // Desde aquí inicia el loop hasta que se terminen todos los bloqueos
         j=i+6;
         //console.log(txt[j]);
@@ -621,90 +615,31 @@ for (i =0; i<txt.length ; i++){
                 palabra=palabra+txt[j];
                 j++;
             }
-            //console.log(palabra);
             minMs = parseInt(palabra);
             j=j+3;
-            //console.log(txt[j]);
             palabra="";
             while(txt[j+1]!="m"){
                 palabra=palabra+txt[j];
                 j++;
             }
-            //console.log(palabra);
             maxMs = parseInt(palabra);
             j=j+5;
-            //console.log(txt[j]);
             palabra="";
             while(txt[j+1] != "v"){ //Mientras que el caracter "v" esté a 2 caracteres de distancia...
                 palabra=palabra+txt[j]; //Se van acumulando los números que se usarán
                 j++;
             }
-            //console.log(palabra);
             numVeces = parseInt(palabra); // Se parsea a int el número de veces que se hará el bloqueo
             ID++;
             var bloqueoObjeto = new Bloqueo(ID,maxMs,minMs,numVeces); //Se crea el objeto
             listaBloqueos.append(bloqueoObjeto); //Se agrega el objeto a la clase
             j=j+8;
-            //console.log(txt[j]);
 
         }
-    }else if (palabra === "Entornos"){
-        //console.log("Aquí va la cantidad de entornos");
-        j=i+6;
-        //Aquí empieza el loop
-
-        while(txt[j] != "*"){
-            palabra="";
-            var IDEntorno, CPUEntorno, cambiosEntorno, bloqueoEntorno;
-
-            while(txt[j] != ":"){
-                letra=txt[j];
-                j++;
-            }
-            //Guardando el ID el entorno
-            IDEntorno=parseInt(letra);
-            j=j+10;
-            palabra="";
-            while(txt[j] != "\n"){
-                palabra=palabra+txt[j];
-                j++;
-            }
-            //Guardando cantidad de micros del entorno
-            CPUEntorno = parseInt(palabra);
-
-            j=j+10;
-
-            palabra="";
-            while(txt[j+1]!="m"){
-                palabra=palabra+txt[j];
-                j++;
-            }
-            //Guardando el tiempo de cambio del entorno
-            cambiosEntorno = parseInt(palabra);
-
-
-            j=j+14;
-
-            palabra="";
-            while(txt[j+1]!="m"){
-                palabra=palabra+txt[j];
-                j++;
-            }
-
-            //Guardando el tiempo de bloqueo del entorno
-            bloqueoEntorno = parseInt(palabra);
-            //console.log(bloqueoEntorno);
-
-            var objetoEntorno = new Entorno(IDEntorno,CPUEntorno,cambiosEntorno,bloqueoEntorno);
-            listaEntornos.append(objetoEntorno);
-            j=j+7;
-        }
-
     }else if (palabra === "Cola"){
        //console.log("Aquí va la cola");
        var IDCola=1, numCola=0;
         j=i+6
-       //console.log(txt[j]);
         while(txt[j] != "*"){
             if(txt[j] == "+"){
                 palabra="";
@@ -717,9 +652,6 @@ for (i =0; i<txt.length ; i++){
                 numCola=parseInt(palabra);
 
                 j=j+5;
-                //console.log(txt[j]);
-                //j=j+3;
-                //console.log(txt[j]);
             }else{
                 var objetoCola = new Cola(IDCola,txt[j],numCola);
                 listaCola.append(objetoCola);
@@ -727,34 +659,11 @@ for (i =0; i<txt.length ; i++){
                 j=j+3;
             }
         }
-
-
     }
     if(txt[i] === "\n"){
-        //console.log(palabra);
         palabra="";
     }
-
 }
-//listaProcesos.returnList();
-// ------------------------------------------------------------- Creación de las tablas ----------------------------------------------------------------
-
-
-
-
-// Datos de entrada
-var cantidadMicros =1;//listaEntornos.buscarEntorno(IDEntorno,"CPU");
-var quantum = 3000;
-var TCC = 10;
-var TB = 10;
-
-// Posicionar tiempos finales a 0 para cada micro
-var provi;
-
-
-//listaMicrosRes.returnList();
-
-
 
 var listaMicros = new LinkedList();
 var listaMicrosRes = new LinkedList();
@@ -764,89 +673,93 @@ var listaMicrosRes = new LinkedList();
 function calcularMicros(cantidadMicros, quantum, TCC, TB){
     listaMicros = new LinkedList();
     listaMicrosRes = new LinkedList();
-    var IDMenorTFMicro;
-    var letraActual;
-    var TCCCalcular,TE,TVC,TBCalcular,TT,Ti,TF;
-    var contHuecos = 0, cambioMs = false, IDTemp;
-    for(i=1;i<=cantidadMicros;i++) {
-        var objetoMicroRes = new microsResumen(i, 0, false, true, 0, false, false);
-        listaMicrosRes.append(objetoMicroRes);
-    }
-
-
-    for(i=1;i<=listaCola.length();i++){
-
-        if(cambioMs == true){
-            IDMenorTFMicro = IDTemp;
-            cambioMs = false;
-            //console.log(cambioMs);
-        }else{
-            //Elegir el que tenga boolean == true
-            IDMenorTFMicro = sortListaMicrosRes();
-            //console.log("ID Menor TF: "+IDMenorTFMicro);
+    if(cantidadMicros <= 0 || quantum <= 0 || TCC < 0 || TB < 0 ){
+        console.log("Alguno/s de los datos ingresados son incorrectos o incompletos");
+        const $cuerpoTabla = document.querySelector("#tablasMicros");
+        const $h2 = document.createElement("h2");
+        $h2.textContent = "Alguno/s de los datos ingresados no cumple con los parámetros";
+        $cuerpoTabla.appendChild($h2);
+    }else{
+        var IDMenorTFMicro;
+        var letraActual;
+        var TCCCalcular,TE,TVC,TBCalcular,TT,Ti,TF;
+        var contHuecos = 0, cambioMs = false, IDTemp;
+        for(i=1;i<=cantidadMicros;i++) {
+            var objetoMicroRes = new microsResumen(i, 0, false, true, 0, false, false);
+            listaMicrosRes.append(objetoMicroRes);
         }
 
-        // Ver si puede entrar a la cola
-        if(listaMicrosRes.buscarMicroRes(IDMenorTFMicro,"TF") >= listaCola.buscarCola(i,"ms")){ // Si el tiempo final es menor al tiempo final del micro
 
-            if(listaMicrosRes.buscarMicroRes(IDMenorTFMicro,"hueco") === true){ //Si es el inicio o si hay un hueco antes...
-                TCCCalcular = 0;
-                listaMicrosRes.buscarMicroRes(IDMenorTFMicro,"hacerHuecoFalse");
+        for(i=1;i<=listaCola.length();i++){
+            // Aquí inicia el proceso de cálculo
+
+            if(cambioMs == true){
+                IDMenorTFMicro = IDTemp;
+                cambioMs = false;
             }else{
-                TCCCalcular = TCC;
+                IDMenorTFMicro = sortListaMicrosRes();
             }
-            //console.log("Antes - ID. "+IDMenorTFMicro+" TF:"+listaMicrosRes.buscarMicroRes(IDMenorTFMicro,"TF"));
-            // Observamos la letra actual en la que estamos posicionados
-            letraActual = listaCola.buscarCola(i,"letra");
-            // Sacamos el Tiempo de la letra y lo guardamos en la variable TE
-            TE = listaProcesos.buscarProcesoPorLetra(letraActual,"tiempo");
-            // Sacamos el TVC
-            TVC = (Math.ceil(TE/quantum)-1)*TCC;//(Math.ceil(TE / quantum)-1)*TCC
-            // Sacamos el tiempo de bloqueo multiplicando la cantidad de veces en las que se utilizará el bloqueo por los ms propuestos en el entorno
-            TBCalcular = listaProcesos.buscarProcesoPorLetra(letraActual,"cantidad")*TB;
-            // Sacamos el tiempo total
-            TT = TE+TVC+TCCCalcular+TBCalcular;
-            // Establecemos el tiempo inicial con el tiempo final pasado de la micro en donde estamos actualmente
-            Ti = listaMicrosRes.buscarMicroRes(IDMenorTFMicro,"TF");
-            TF = TT + Ti;
-            var objetoMicros = new Micros(i+contHuecos,letraActual,TCCCalcular,TE,TVC,TBCalcular,TT,Ti,TF,IDMenorTFMicro,false,false);
 
-            listaMicrosRes.actualizarTF(IDMenorTFMicro,TF);
-            listaMicrosRes.actualizarUltimoElementoID(IDMenorTFMicro,i+contHuecos);
-            listaMicrosRes.contieneDatos(IDMenorTFMicro);
-            listaMicrosRes.ultimoElementoHueco(IDMenorTFMicro,"falso");
-            listaMicros.append(objetoMicros);
-        }else{
-            //listaMicrosRes.returnList();
-            // Nos posicionamos desde el micro 1
-            for(var j=1; j<=listaMicrosRes.length();j++){
-                if (listaMicrosRes.buscarMicroRes(j, "TF") < listaCola.buscarCola(i, "ms")) {
-                    if(listaMicrosRes.ultimoElementoHueco(j,"regresarValor") === true){ //Si la última variable ingresada fue un hueco...
-                        listaMicros.ignorarMicro(listaMicrosRes.buscarMicroRes(j,"ultimo"),"ignorar",j);
+            // Ver si puede entrar a la cola
+            if(listaMicrosRes.buscarMicroRes(IDMenorTFMicro,"TF") >= listaCola.buscarCola(i,"ms")){ // Si el tiempo final es menor al tiempo final del micro
 
-                    }
-                    // Si se hace un hueco
-                    TE = listaCola.buscarCola(i, "ms") - listaMicrosRes.buscarMicroRes(j, "TF");
-                    listaMicrosRes.buscarMicroRes(j, "hacerHuecoTrue");
-                    Ti = listaMicrosRes.buscarMicroRes(j, "TF"); // Actualizar Ti
-                    TF = listaCola.buscarCola(i, "ms");
-                    listaMicrosRes.actualizarTF(j, TF);
-                    listaMicrosRes.actualizarUltimoElementoID(j, i + contHuecos);
-                    listaMicrosRes.ultimoElementoHueco(j,"verdadero");
-                    var objetoMicros = new Micros(i + contHuecos, "-", "-", "-", "-", "-", TE, Ti, TF, j,false, true);
-                    listaMicros.append(objetoMicros)
-                    contHuecos++;
-                    //console.log("huecos: "+contHuecos);
-                    i--;
+                if(listaMicrosRes.buscarMicroRes(IDMenorTFMicro,"hueco") === true){ //Si es el inicio o si hay un hueco antes...
+                    TCCCalcular = 0;
+                    listaMicrosRes.buscarMicroRes(IDMenorTFMicro,"hacerHuecoFalse");
+                }else{
+                    TCCCalcular = TCC;
                 }
+                //console.log("Antes - ID. "+IDMenorTFMicro+" TF:"+listaMicrosRes.buscarMicroRes(IDMenorTFMicro,"TF"));
+                // Observamos la letra actual en la que estamos posicionados
+                letraActual = listaCola.buscarCola(i,"letra");
+                // Sacamos el Tiempo de la letra y lo guardamos en la variable TE
+                TE = listaProcesos.buscarProcesoPorLetra(letraActual,"tiempo");
+                // Sacamos el TVC
+                TVC = (Math.ceil(TE/quantum)-1)*TCC;//(Math.ceil(TE / quantum)-1)*TCC
+                // Sacamos el tiempo de bloqueo multiplicando la cantidad de veces en las que se utilizará el bloqueo por los ms propuestos en el entorno
+                TBCalcular = listaProcesos.buscarProcesoPorLetra(letraActual,"cantidad")*TB;
+                // Sacamos el tiempo total
+                TT = TE+TVC+TCCCalcular+TBCalcular;
+                // Establecemos el tiempo inicial con el tiempo final pasado de la micro en donde estamos actualmente
+                Ti = listaMicrosRes.buscarMicroRes(IDMenorTFMicro,"TF");
+                TF = TT + Ti;
+                var objetoMicros = new Micros(i+contHuecos,letraActual,TCCCalcular,TE,TVC,TBCalcular,TT,Ti,TF,IDMenorTFMicro,false,false);
 
-                cambioMs = true;
-                IDTemp = sortListaMicrosRes();
+                listaMicrosRes.actualizarTF(IDMenorTFMicro,TF);
+                listaMicrosRes.actualizarUltimoElementoID(IDMenorTFMicro,i+contHuecos);
+                listaMicrosRes.contieneDatos(IDMenorTFMicro);
+                listaMicrosRes.ultimoElementoHueco(IDMenorTFMicro,"falso");
+                listaMicros.append(objetoMicros);
+            }else{
+                // Nos posicionamos desde el micro 1
+                for(var j=1; j<=listaMicrosRes.length();j++){
+                    if (listaMicrosRes.buscarMicroRes(j, "TF") < listaCola.buscarCola(i, "ms")) {
+                        // Si se realiza un hueco
+                        if(listaMicrosRes.ultimoElementoHueco(j,"regresarValor") === true){ //Si la última variable ingresada fue un hueco...
+                            // Combinar huecos
+                            listaMicros.ignorarMicro(listaMicrosRes.buscarMicroRes(j,"ultimo"),"ignorar",j);
+                        }
 
+                        TE = listaCola.buscarCola(i, "ms") - listaMicrosRes.buscarMicroRes(j, "TF");
+                        listaMicrosRes.buscarMicroRes(j, "hacerHuecoTrue");
+                        Ti = listaMicrosRes.buscarMicroRes(j, "TF"); // Actualizar Ti
+                        TF = listaCola.buscarCola(i, "ms");
+                        listaMicrosRes.actualizarTF(j, TF);
+                        listaMicrosRes.actualizarUltimoElementoID(j, i + contHuecos);
+                        listaMicrosRes.ultimoElementoHueco(j,"verdadero");
+                        var objetoMicros = new Micros(i + contHuecos, "-", "-", "-", "-", "-", TE, Ti, TF, j,false, true);
+                        listaMicros.append(objetoMicros)
+                        contHuecos++;
+                        i--;
+                    }
+                    cambioMs = true;
+                    IDTemp = sortListaMicrosRes();
+                }
             }
         }
+        generarTablas(cantidadMicros);
     }
-    generarTablas(cantidadMicros);
+
 }
 
 
@@ -854,8 +767,7 @@ function sortListaMicrosRes(){
     var IDMenor = listaMicrosRes.length();
 
     for (var i=listaMicrosRes.length();i>1;i--){
-        //console.log(i);
-        // Vamos a buscar el menor de la lista
+
         if(listaMicrosRes.buscarMicroRes(i,"TF")>=listaMicrosRes.buscarMicroRes(i-1,"TF")){
             if(listaMicrosRes.buscarMicroRes(IDMenor,"TF")>=listaMicrosRes.buscarMicroRes(i-1,"TF")){
                 listaMicrosRes.buscarMicroRes(IDMenor,"hacerBoolFalse");
@@ -896,7 +808,7 @@ function generarTablas(cantidadMicros){
     // Desde aquí inicia el loop para CREAR CADA TABLA
     for(var j=1; j<=cantidadMicros;j++){
         if(listaMicrosRes.buscarMicroRes(j,"contieneDatos") === true){
-            console.log("Entró al micro "+j)
+            //console.log("Entró al micro "+j)
             const $h2 = document.createElement("h2");
             $h2.textContent = "Micro "+j;
             $cuerpoTabla.appendChild($h2);
@@ -1015,7 +927,7 @@ function generarTablas(cantidadMicros){
 
                 }
             }
-            // Aquí va el loop para agregar la ingormación de la tabla
+            // Aquí va el loop para agregar la información de la tabla
 
 
             // Se agrega el cuerpo a la tabla
